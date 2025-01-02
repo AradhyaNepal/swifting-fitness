@@ -26,19 +26,18 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        auth -> auth
-
-                                .requestMatchers("/v3/api-docs/**",
-                                        "/swagger-ui/**",
-                                        "/swagger-ui.html",
-                                        "/api/v1/auth/**",
-                                        "/assets/**").permitAll()
-                                .anyRequest().hasRole((UserRole.user.toRoleString())
-                                ))
+                            auth -> auth
+                                    .requestMatchers("/v3/api-docs/**",
+                                            "/swagger-ui/**",
+                                            "/swagger-ui.html",
+                                            "/api/v1/auth/**",
+                                            "/assets/**").permitAll()
+                                    .anyRequest().permitAll()
+//                                    .anyRequest().hasRole((UserRole.user.toRoleString()))
+                )
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,6 +1,6 @@
 package com.a2.swifting_fitness.features.auth.controller;
 
-import com.a2.swifting_fitness.common.GenericResponse;
+import com.a2.swifting_fitness.common.GenericResponseEntity;
 import com.a2.swifting_fitness.common.enums.StringConstants;
 import com.a2.swifting_fitness.features.auth.dto.AuthenticatedResponse;
 import com.a2.swifting_fitness.features.auth.dto.RegisterRequest;
@@ -22,18 +22,18 @@ public class RegisterController {
 
 
     @PostMapping()
-    public GenericResponse<Void> register(@RequestBody @Valid RegisterRequest request) {
-        return GenericResponse.success(null, StringConstants.registerSuccessfully);
+    public GenericResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) {
+        return GenericResponseEntity.success(null, StringConstants.registerSuccessfully);
     }
 
     @PostMapping(value = "/verify-otp")
-    public GenericResponse<Void> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) {
-        return GenericResponse.success(null, StringConstants.otpVerifiedSuccessfully);
+    public GenericResponseEntity<Void> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) {
+        return GenericResponseEntity.success(null, StringConstants.otpVerifiedSuccessfully);
     }
 
     @PostMapping(value = "/set-password")
-    public GenericResponse<AuthenticatedResponse> setPassword(@RequestBody @Valid SetPasswordRequest request) {
-        return GenericResponse.success(AuthenticatedResponse.builder().accessToken("AccessToken").refreshToken("RefreshToken").build(), StringConstants.passwordSetSuccessfully);
+    public GenericResponseEntity<AuthenticatedResponse> setPassword(@RequestBody @Valid SetPasswordRequest request) {
+        return GenericResponseEntity.success(AuthenticatedResponse.builder().accessToken("AccessToken").refreshToken("RefreshToken").build(), StringConstants.passwordSetSuccessfully);
     }
 
 }
