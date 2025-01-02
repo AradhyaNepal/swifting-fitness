@@ -1,7 +1,7 @@
 package com.a2.swifting_fitness.features.auth.config;
 
-import com.a2.pickyami.game.entity.Players;
-import com.a2.pickyami.game.repository.PlayerRepository;
+import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
+import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 class MyUserDetailsService implements UserDetailsService {
 
-    final private PlayerRepository userRepository;
+    final private FitnessFolksRepository userRepository;
 
     @Override
-    public Players loadUserByUsername(String uid) throws UsernameNotFoundException {
+    public FitnessFolks loadUserByUsername(String uid) throws UsernameNotFoundException {
         var user = userRepository.findByUId(uid);
 
         if (user.isPresent()) {

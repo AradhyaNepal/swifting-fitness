@@ -3,6 +3,7 @@ package com.a2.swifting_fitness.features.auth.config;
 
 
 import com.a2.pickyami.game.enums.Role;
+import com.a2.swifting_fitness.common.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,10 +34,8 @@ public class SecurityConfiguration {
                                         "/swagger-ui.html",
                                         "/api/v1/auth/**",
                                         "/assets/**").permitAll()
-
-
-                                .anyRequest().permitAll()//.hasRole(Role.user.toString())
-                )
+                                .anyRequest().hasRole((UserRole.user.toRoleString())
+                                ))
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -48,9 +47,6 @@ public class SecurityConfiguration {
 
 
     }
-
-
-
 
 
 }
