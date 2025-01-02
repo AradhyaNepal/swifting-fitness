@@ -1,5 +1,8 @@
 package com.a2.swifting_fitness.features.auth.controller;
 
+import com.a2.swifting_fitness.common.GenericResponse;
+import com.a2.swifting_fitness.common.enums.StringConstants;
+import com.a2.swifting_fitness.features.auth.dto.AuthenticatedResponse;
 import com.a2.swifting_fitness.features.auth.dto.RegisterRequest;
 import com.a2.swifting_fitness.features.auth.dto.SetPasswordRequest;
 import com.a2.swifting_fitness.features.auth.dto.VerifyOTPRequest;
@@ -19,18 +22,18 @@ public class RegisterController {
 
 
     @PostMapping()
-    public void register(@RequestBody @Valid RegisterRequest request) {
-
+    public GenericResponse<Void> register(@RequestBody @Valid RegisterRequest request) {
+        return GenericResponse.success(null, StringConstants.registerSuccessfully);
     }
 
     @PostMapping(value = "/verify-otp")
-    public void verifyOTP(@RequestBody @Valid VerifyOTPRequest request) {
-
+    public GenericResponse<Void> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) {
+        return GenericResponse.success(null, StringConstants.otpVerifiedSuccessfully);
     }
 
     @PostMapping(value = "/set-password")
-    public void setPassword(@RequestBody @Valid SetPasswordRequest request) {
-
+    public GenericResponse<AuthenticatedResponse> setPassword(@RequestBody @Valid SetPasswordRequest request) {
+        return GenericResponse.success(AuthenticatedResponse.builder().accessToken("AccessToken").refreshToken("RefreshToken").build(), StringConstants.passwordSetSuccessfully);
     }
 
 }

@@ -10,6 +10,12 @@ public class StringConstants {
     public static final String genderRequired = "Please enter your gender";
     public static final String passwordRequired = "Please enter your password";
     public static final String otpRequired = "Please enter your OTP";
-    public static final String passwordRegexMessage="Password must have one upper case, one lower case, one symbol and one digit";
-    public static final String passwordMinLengthMessage="Password must be 8 character long";
+    public static final String passwordRegexMessage = "Password must have one upper case, one lower case, one symbol and one digit";
+    public static final String passwordMinLengthMessage = "Password must be 8 character long";
+    public static String registerSuccessfully = "Registered successfully";
+    public static String otpVerifiedSuccessfully = "OTP Verified successfully";
+    public static String passwordSetSuccessfully = "Account created and password set successfully";
+    public static String loggedInSuccessfully = "Logged in successfully";
+    public static String emailSentSuccessfully = "Email sent successfully";
+    public static String passwordChangedSuccessfullyPleaseLogin = "Password changed successfully. Please login and enjoy your fitness journet.";
 }

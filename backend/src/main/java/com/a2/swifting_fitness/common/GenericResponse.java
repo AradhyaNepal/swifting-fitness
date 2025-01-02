@@ -30,13 +30,7 @@ public class GenericResponse<T> extends ResponseEntity<T> {
                 .build();
     }
 
-    public static <T> GenericResponse<T> success(String message) {
-        return GenericResponse.<T>builder()
-                .success(true)
-                .message(message)
-                .sCode(HttpStatus.OK)
-                .build();
-    }
+
 
 
     public static <T> GenericResponse<T> error(String message, HttpStatusCode statusCode) {
