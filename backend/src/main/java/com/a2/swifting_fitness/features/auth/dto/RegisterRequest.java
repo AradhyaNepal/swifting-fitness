@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.features.auth.dto;
 
+import com.a2.swifting_fitness.common.ValidationConstant;
 import com.a2.swifting_fitness.common.enums.Gender;
 import com.a2.swifting_fitness.common.enums.StringConstants;
 import jakarta.validation.constraints.Email;
@@ -20,7 +21,7 @@ public class RegisterRequest {
     private String email;
 
     @NotEmpty(message = StringConstants.ageRequired)
-    @Size(max = 100, min = 18, message = StringConstants.ageNotValid)
+    @Size(max = ValidationConstant.ageMaxLength, min = ValidationConstant.ageMinLength, message = StringConstants.ageNotValid)
     private int age;
 
     @NotEmpty(message = StringConstants.genderRequired)
