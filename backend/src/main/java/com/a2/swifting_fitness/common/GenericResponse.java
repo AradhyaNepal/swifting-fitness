@@ -1,43 +1,40 @@
 package com.a2.swifting_fitness.common;
 
 
-import lombok.Builder;
-import org.springframework.http.HttpStatus;
+import lombok.*;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 
-@Builder
+@Getter
 
 public class GenericResponse<T> extends ResponseEntity<T> {
 
-    private Boolean success;
-    private String message;
-    private HttpStatusCode sCode;
-    private T data;
+    private final String message;
 
-    @Override
-    public HttpStatusCode getStatusCode() {
-        return sCode;
+    private final T data;
+
+
+    @Builder
+    public GenericResponse(HttpStatusCode statusCode, String message, T data) {
+        super(statusCode);
+        this.data = data;
+        this.message = message;
     }
+
 
     public static <T> GenericResponse<T> success(T data, String message) {
         return GenericResponse.<T>builder()
-                .success(true)
                 .message(message)
                 .data(data)
-                .sCode(HttpStatus.OK)
                 .build();
     }
 
 
-
-
     public static <T> GenericResponse<T> error(String message, HttpStatusCode statusCode) {
         return GenericResponse.<T>builder()
-                .success(false)
                 .message(message)
-                .sCode(statusCode)
+                .statusCode(statusCode)
                 .build();
     }
 
