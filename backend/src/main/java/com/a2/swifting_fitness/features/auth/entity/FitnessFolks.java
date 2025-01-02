@@ -22,6 +22,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "FitnessFolks")
 public class FitnessFolks implements UserDetails {
 
     @Id

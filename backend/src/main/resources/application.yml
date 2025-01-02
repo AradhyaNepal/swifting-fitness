@@ -8,7 +8,7 @@ spring:
 #      - file:./uploads/
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/swifting_fitness;
+    url: jdbc:postgresql://localhost:5432/swifting_fitness
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver

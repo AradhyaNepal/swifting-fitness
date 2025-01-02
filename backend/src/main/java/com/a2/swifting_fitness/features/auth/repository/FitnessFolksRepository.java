@@ -11,10 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface FitnessFolksRepository extends JpaRepository<FitnessFolks, Integer> {
-    @Query("SELECT p FROM Players p WHERE p.uid = :uid")
+    @Query("SELECT p FROM FitnessFolks p WHERE p.uid = :uid")
     Optional<FitnessFolks> findByUId(@Param("uid") String uid);
 
-    @Query("SELECT p FROM Players p WHERE p.email = :email")
+    @Query("SELECT p FROM FitnessFolks p WHERE p.email = :email")
     Optional<FitnessFolks> findByEmail(@Param("email") String email);
 
 }
