@@ -9,6 +9,7 @@ import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,16 +17,17 @@ import java.time.LocalDateTime;
 @Service
 @AllArgsConstructor
 public class AuthService {
-    final private FitnessFolksRepository fitnessFolksRepo;
+    final private FitnessFolksRepository userRepo;
     final private AuthenticationManager authManager;
     final private JwtService jwtService;
     final private OTPService otpService;
+    final private PasswordEncoder passwordEncoder;
 
 
     public AuthenticatedResponse login(LoginRequest request) throws CustomException {
         var authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         if (authentication.isAuthenticated()) {
-            var user = fitnessFolksRepo.findByEmail(request.getEmail());
+            var user = userRepo.findByEmail(request.getEmail());
             if (user.isPresent()) {
                 var accessToken = jwtService.generateToken(user.get());
                 return AuthenticatedResponse.builder().accessToken(accessToken).build();
@@ -39,11 +41,11 @@ public class AuthService {
     }
 
     public void register(RegisterRequest request) throws CustomException {
-        var existingUser = fitnessFolksRepo.findByEmail(request.getEmail());
+        var existingUser = userRepo.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
             throw new CustomException("User with given email already exist");
         }
-        var user = fitnessFolksRepo.save(FitnessFolks.builder()
+        var user = userRepo.save(FitnessFolks.builder()
                 .fullName(request.getFullName())
                 .age(request.getAge())
                 .email(request.getEmail())
@@ -53,32 +55,36 @@ public class AuthService {
     }
 
     public void verifyPassword(VerifyOTPRequest request) throws CustomException {
-        var user = fitnessFolksRepo.findByEmail(request.getEmail());
+        var user = userRepo.findByEmail(request.getEmail());
         if (user.isPresent()) {
             var userGet = user.get();
-            var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp());
+            var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), false);
             if (otpIsValid) return;
-            var wrongAttempt = userGet.getWrongAttempts() + 1;
-            var totalAttempt = 5;
-            if (wrongAttempt == totalAttempt) {
-                userGet.setIsBlockedTill(LocalDateTime.now().plusDays(1));
-                userGet.setWrongAttempts(0);
-                fitnessFolksRepo.save(userGet);
-                throw new CustomException("Lots of wrong trial. Your account is blocked for 1 day");
-            } else {
-                userGet.setWrongAttempts(wrongAttempt);
-                fitnessFolksRepo.save(userGet);
-                throw new CustomException("Invalid OTP." + (wrongAttempt == totalAttempt - 1 ? " Last One Attempt Left" : ""));
-
-            }
+            updateWrongAttempt(userGet);
         } else {
             throw new CustomException(StringConstants.noUserFromThatUsername);
         }
     }
 
+    private void updateWrongAttempt(FitnessFolks userGet) throws CustomException {
+        var wrongAttempt = userGet.getWrongAttempts() + 1;
+        var totalAttempt = 5;
+        if (wrongAttempt == totalAttempt) {
+            userGet.setIsBlockedTill(LocalDateTime.now().plusDays(1));
+            userGet.setWrongAttempts(0);
+            userRepo.save(userGet);
+            throw new CustomException("Lots of wrong trial. Your account is blocked for 1 day");
+        } else {
+            userGet.setWrongAttempts(wrongAttempt);
+            userRepo.save(userGet);
+            throw new CustomException("Invalid OTP." + (wrongAttempt == totalAttempt - 1 ? " Last One Attempt Left" : ""));
+
+        }
+    }
+
 
     public void resendOTP(SendOTPFromEmailRequest request) throws CustomException {
-        var user = fitnessFolksRepo.findByEmail(request.getEmail());
+        var user = userRepo.findByEmail(request.getEmail());
         if (user.isPresent()) {
             otpService.generateAndSendOTP(user.get());
         } else {
@@ -87,18 +93,25 @@ public class AuthService {
     }
 
     public AuthenticatedResponse setRegisterPassword(SetPasswordRequest request) throws CustomException {
-        var accessToken=jwtService.generateToken(setPassword(request));
-        return  AuthenticatedResponse.builder().accessToken(accessToken).build();
+        var accessToken = jwtService.generateToken(setPassword(request));
+        return AuthenticatedResponse.builder().accessToken(accessToken).build();
     }
 
-    public  FitnessFolks setPassword(SetPasswordRequest request) throws CustomException {
-        var user = fitnessFolksRepo.findByEmail(request.getEmail());
+    public FitnessFolks setPassword(SetPasswordRequest request) throws CustomException {
+        var user = userRepo.findByEmail(request.getEmail());
         if (user.isPresent()) {
-            var userGet=  user.get();
-            var otpIsValid=otpService.otpIsCorrect(userGet,request.getOtp());
-            return  userGet;
+            var userGet = user.get();
+            var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), true);
+            if (otpIsValid) {
+                userGet.setPassword(passwordEncoder.encode(request.getPassword()));
+                userRepo.save(userGet);
+                return userGet;
+            } else {
+                updateWrongAttempt(userGet);
+                throw new CustomException("Invalid OTP");
+            }
 
-        }else{
+        } else {
             throw new CustomException(StringConstants.noUserFromThatUsername);
         }
     }

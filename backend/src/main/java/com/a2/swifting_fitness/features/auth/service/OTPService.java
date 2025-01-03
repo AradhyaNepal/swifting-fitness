@@ -67,7 +67,7 @@ public class OTPService {
         return otp;
     }
 
-    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP) {
+    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid) {
         var otpEncoded = passwordEncoder.encode(enteredOTP);
         LocalDateTime now = LocalDateTime.now();
         var notExpiredOtp = otpRepository.findByUserId(fitnessFolks.getId())
@@ -77,7 +77,7 @@ public class OTPService {
                 ).toList();
 
         var isValid = !notExpiredOtp.isEmpty();
-        if (isValid) {
+        if (isValid && expireIfValid) {
             notExpiredOtp.forEach(e -> e.setExpiry(now));
         }
         return isValid;
