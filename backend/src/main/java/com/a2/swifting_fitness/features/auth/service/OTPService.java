@@ -23,6 +23,9 @@ public class OTPService {
     final private PasswordEncoder passwordEncoder;
 
     public void generateAndSendOTP(FitnessFolks user) throws CustomException {
+        if (!user.isAccountNonLocked()) {
+            throw new CustomException("User account is locked due to suspicious requests. Please try again later.");
+        }
         StringBuilder otp = getSecureOTP();
         var now = LocalDateTime.now();
         var oldOTP = checkAndExpireOldUser(user, now);

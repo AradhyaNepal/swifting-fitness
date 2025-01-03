@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForgetPasswordRequest {
+public class SendOTPFromEmailRequest {
     @NotEmpty(message = StringConstants.emailRequired)
     @Email(message = StringConstants.emailNotValid)
     private String email;

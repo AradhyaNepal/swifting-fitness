@@ -2,7 +2,7 @@ package com.a2.swifting_fitness.features.auth.controller;
 
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
 import com.a2.swifting_fitness.common.StringConstants;
-import com.a2.swifting_fitness.features.auth.dto.ForgetPasswordRequest;
+import com.a2.swifting_fitness.features.auth.dto.SendOTPFromEmailRequest;
 import com.a2.swifting_fitness.features.auth.dto.SetPasswordRequest;
 import com.a2.swifting_fitness.features.auth.dto.VerifyOTPRequest;
 import com.a2.swifting_fitness.features.auth.service.AuthService;
@@ -20,7 +20,7 @@ public class ForgotPasswordController {
     final private AuthService service;
 
     @PostMapping()
-    public GenericResponseEntity<Void> forgotPassword(@RequestBody @Valid ForgetPasswordRequest request) {
+    public GenericResponseEntity<Void> forgotPassword(@RequestBody @Valid SendOTPFromEmailRequest request) {
         return GenericResponseEntity.success(null, StringConstants.emailSentSuccessfully);
     }
 

@@ -14,6 +14,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @AllArgsConstructor
 public class AuthService {
@@ -55,11 +57,26 @@ public class AuthService {
         return AuthenticatedResponse.builder().accessToken(accessToken).build();
     }
 
-    public void verifyPassword(VerifyOTPRequest request)throws  CustomException{
-        var user=fitnessFolksRepo.findByEmail(request.getEmail());
-        if(user.isPresent()){
-            var otpIsValid=otpService.otpIsCorrect(user.get(),request.getOtp());
-        }else{
+    public boolean verifyPassword(VerifyOTPRequest request) throws CustomException {
+        var user = fitnessFolksRepo.findByEmail(request.getEmail());
+        if (user.isPresent()) {
+            var userGet = user.get();
+            var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp());
+            if (otpIsValid) return true;
+            var wrongAttempt = userGet.getWrongAttempts() + 1;
+            var totalAttempt = 5;
+            if (wrongAttempt == totalAttempt) {
+                userGet.setIsBlockedTill(LocalDateTime.now().plusDays(1));
+                userGet.setWrongAttempts(0);
+                fitnessFolksRepo.save(userGet);
+                throw new CustomException("Lots of wrong trial. Your account is blocked for 1 day");
+            } else {
+                userGet.setWrongAttempts(wrongAttempt);
+                fitnessFolksRepo.save(userGet);
+                throw new CustomException("Invalid OTP." + (wrongAttempt == totalAttempt - 1 ? " Last One Attempt Left" : ""));
+
+            }
+        } else {
             throw new CustomException(StringConstants.noUserFromThatUsername);
         }
     }
