@@ -1,11 +1,10 @@
-
 spring:
   application:
     name: swifting-fitness
-#  resources:
-#    static-locations:
-#      - classpath:/static/
-#      - file:./uploads/
+  #  resources:
+  #    static-locations:
+  #      - classpath:/static/
+  #      - file:./uploads/
 
   datasource:
     url: jdbc:postgresql://localhost:5432/swifting_fitness
@@ -23,3 +22,16 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${swifting-fitness-email}
+    password: ${swifting-fitness-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+

@@ -1,7 +1,7 @@
 package com.a2.swifting_fitness.features.auth.controller;
 
-import com.a2.swifting_fitness.common.GenericResponseEntity;
-import com.a2.swifting_fitness.common.enums.StringConstants;
+import com.a2.swifting_fitness.common.model.GenericResponseEntity;
+import com.a2.swifting_fitness.common.StringConstants;
 import com.a2.swifting_fitness.features.auth.dto.ForgetPasswordRequest;
 import com.a2.swifting_fitness.features.auth.dto.SetPasswordRequest;
 import com.a2.swifting_fitness.features.auth.dto.VerifyOTPRequest;

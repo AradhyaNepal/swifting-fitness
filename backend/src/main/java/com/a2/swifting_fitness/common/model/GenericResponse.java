@@ -1,4 +1,4 @@
-package com.a2.swifting_fitness.common;
+package com.a2.swifting_fitness.common.model;
 
 import lombok.*;
 

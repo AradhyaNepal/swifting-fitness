@@ -1,6 +1,6 @@
 package com.a2.swifting_fitness.features.auth.config;
 
-import com.a2.swifting_fitness.common.enums.StringConstants;
+import com.a2.swifting_fitness.common.StringConstants;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
