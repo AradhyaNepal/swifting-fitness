@@ -3,10 +3,7 @@ package com.a2.swifting_fitness.features.auth.service;
 import com.a2.swifting_fitness.common.CustomException;
 import com.a2.swifting_fitness.common.StringConstants;
 import com.a2.swifting_fitness.features.auth.config.JwtService;
-import com.a2.swifting_fitness.features.auth.dto.AuthenticatedResponse;
-import com.a2.swifting_fitness.features.auth.dto.LoginRequest;
-import com.a2.swifting_fitness.features.auth.dto.RegisterRequest;
-import com.a2.swifting_fitness.features.auth.dto.VerifyOTPRequest;
+import com.a2.swifting_fitness.features.auth.dto.*;
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import lombok.AllArgsConstructor;
@@ -41,7 +38,7 @@ public class AuthService {
         }
     }
 
-    public AuthenticatedResponse register(RegisterRequest request) throws CustomException {
+    public void register(RegisterRequest request) throws CustomException {
         var existingUser = fitnessFolksRepo.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
             throw new CustomException("User with given email already exist");
@@ -52,17 +49,15 @@ public class AuthService {
                 .email(request.getEmail())
                 .gender(request.getGender())
                 .build());
-        var accessToken = jwtService.generateToken(user);
         otpService.generateAndSendOTP(user);
-        return AuthenticatedResponse.builder().accessToken(accessToken).build();
     }
 
-    public boolean verifyPassword(VerifyOTPRequest request) throws CustomException {
+    public void verifyPassword(VerifyOTPRequest request) throws CustomException {
         var user = fitnessFolksRepo.findByEmail(request.getEmail());
         if (user.isPresent()) {
             var userGet = user.get();
             var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp());
-            if (otpIsValid) return true;
+            if (otpIsValid) return;
             var wrongAttempt = userGet.getWrongAttempts() + 1;
             var totalAttempt = 5;
             if (wrongAttempt == totalAttempt) {
@@ -82,6 +77,28 @@ public class AuthService {
     }
 
 
+    public void resendOTP(SendOTPFromEmailRequest request) throws CustomException {
+        var user = fitnessFolksRepo.findByEmail(request.getEmail());
+        if (user.isPresent()) {
+            otpService.generateAndSendOTP(user.get());
+        } else {
+            throw new CustomException(StringConstants.noUserFromThatUsername);
+        }
+    }
+
+    public AuthenticatedResponse setRegisterPassword(SetPasswordRequest request) throws CustomException {
+        var accessToken=jwtService.generateToken(setPassword(request));
+        return  AuthenticatedResponse.builder().accessToken(accessToken).build();
+    }
+
+    public  FitnessFolks setPassword(SetPasswordRequest request) throws CustomException {
+        var existingUser = fitnessFolksRepo.findByEmail(request.getEmail());
+        if (existingUser.isPresent()) {
+
+        }else{
+            throw new CustomException(StringConstants.noUserFromThatUsername);
+        }
+    }
 
 
 }
