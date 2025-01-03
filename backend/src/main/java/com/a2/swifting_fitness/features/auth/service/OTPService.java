@@ -1,6 +1,7 @@
 package com.a2.swifting_fitness.features.auth.service;
 
 import com.a2.swifting_fitness.common.CustomException;
+import com.a2.swifting_fitness.common.StringConstants;
 import com.a2.swifting_fitness.common.model.EmailDetails;
 import com.a2.swifting_fitness.common.service.EmailService;
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
@@ -26,7 +27,7 @@ public class OTPService {
 
     public void generateAndSendOTP(FitnessFolks user) throws CustomException {
         if (!user.isAccountNonLocked()) {
-            throw new CustomException("User account is locked due to suspicious requests. Please try again later.");
+            throw new CustomException(StringConstants.userLockedCannotContinue);
         }
         StringBuilder otp = getSecureOTP();
         var now = LocalDateTime.now();
@@ -50,7 +51,7 @@ public class OTPService {
         var oldOTP = otpRepository.findByUserId(user.getId())
                 .stream().filter(e -> e.getExpiry().isAfter(now.minusMinutes(60))).toList();
         if (oldOTP.size() > 5) {
-            throw new CustomException("Lots of OTP sent. Please try again later after few hours.");
+            throw new CustomException(StringConstants.sendingOTPLocked);
         }
         for (var e : oldOTP) {
             e.setExpiry(now);

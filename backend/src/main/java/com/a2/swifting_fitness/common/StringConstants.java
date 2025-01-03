@@ -18,4 +18,10 @@ public class StringConstants {
     public static String loggedInSuccessfully = "Logged in successfully";
     public static String emailSentSuccessfully = "Email sent successfully";
     public static String passwordChangedSuccessfullyPleaseLogin = "Password changed successfully. Please login and enjoy your fitness journet.";
+    public static String invalidCredentials="Invalid Credentials";
+    public static String emailAlreadyExist="User with given email already exist";
+    public static String blockingUserDueToWrongTrial ="Lots of wrong trial. Your account is blocked for 1 day";
+    public static String invalidOTP="Invalid OTP";
+    public static String userLockedCannotContinue="User account is locked due to suspicious requests. Please try again later.";
+    public static String sendingOTPLocked="Lots of OTP sent. Please try again later after few hours.";
 }

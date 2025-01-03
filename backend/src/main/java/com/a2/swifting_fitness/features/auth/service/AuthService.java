@@ -32,18 +32,18 @@ public class AuthService {
                 var accessToken = jwtService.generateToken(user.get());
                 return AuthenticatedResponse.builder().accessToken(accessToken).build();
             } else {
-                throw new CustomException("Cannot find user details");
+                throw new CustomException(StringConstants.noUserFromThatUsername);
 
             }
         } else {
-            throw new CustomException("Invalid Credentials");
+            throw new CustomException(StringConstants.invalidCredentials);
         }
     }
 
     public void register(RegisterRequest request) throws CustomException {
         var existingUser = userRepo.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
-            throw new CustomException("User with given email already exist");
+            throw new CustomException(StringConstants.emailAlreadyExist);
         }
         var user = userRepo.save(FitnessFolks.builder()
                 .fullName(request.getFullName())
@@ -73,11 +73,11 @@ public class AuthService {
             userGet.setIsBlockedTill(LocalDateTime.now().plusDays(1));
             userGet.setWrongAttempts(0);
             userRepo.save(userGet);
-            throw new CustomException("Lots of wrong trial. Your account is blocked for 1 day");
+            throw new CustomException(StringConstants.blockingUserDueToWrongTrial);
         } else {
             userGet.setWrongAttempts(wrongAttempt);
             userRepo.save(userGet);
-            throw new CustomException("Invalid OTP." + (wrongAttempt == totalAttempt - 1 ? " Last One Attempt Left" : ""));
+            throw new CustomException(StringConstants.invalidOTP + (wrongAttempt == totalAttempt - 1 ? " Last One Attempt Left" : ""));
 
         }
     }
@@ -108,7 +108,7 @@ public class AuthService {
                 return userGet;
             } else {
                 updateWrongAttempt(userGet);
-                throw new CustomException("Invalid OTP");
+                throw new CustomException(StringConstants.invalidOTP);
             }
 
         } else {
