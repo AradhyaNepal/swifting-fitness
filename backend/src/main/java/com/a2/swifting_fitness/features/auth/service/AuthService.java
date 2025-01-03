@@ -54,7 +54,7 @@ public class AuthService {
         otpService.generateAndSendOTP(user);
     }
 
-    public void verifyPassword(VerifyOTPRequest request) throws CustomException {
+    public void verifyOTP(VerifyOTPRequest request) throws CustomException {
         var user = userRepo.findByEmail(request.getEmail());
         if (user.isPresent()) {
             var userGet = user.get();
@@ -83,7 +83,7 @@ public class AuthService {
     }
 
 
-    public void resendOTP(SendOTPFromEmailRequest request) throws CustomException {
+    public void resendOTP(SendOTPToEmailRequest request) throws CustomException {
         var user = userRepo.findByEmail(request.getEmail());
         if (user.isPresent()) {
             otpService.generateAndSendOTP(user.get());
