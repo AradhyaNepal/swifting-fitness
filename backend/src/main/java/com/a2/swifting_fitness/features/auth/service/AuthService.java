@@ -92,8 +92,11 @@ public class AuthService {
     }
 
     public  FitnessFolks setPassword(SetPasswordRequest request) throws CustomException {
-        var existingUser = fitnessFolksRepo.findByEmail(request.getEmail());
-        if (existingUser.isPresent()) {
+        var user = fitnessFolksRepo.findByEmail(request.getEmail());
+        if (user.isPresent()) {
+            var userGet=  user.get();
+            var otpIsValid=otpService.otpIsCorrect(userGet,request.getOtp());
+            return  userGet;
 
         }else{
             throw new CustomException(StringConstants.noUserFromThatUsername);

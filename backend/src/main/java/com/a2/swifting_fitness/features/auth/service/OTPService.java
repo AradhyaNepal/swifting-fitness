@@ -15,6 +15,8 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.apache.commons.lang3.BooleanUtils.forEach;
+
 @Service
 @AllArgsConstructor
 public class OTPService {
@@ -67,12 +69,17 @@ public class OTPService {
 
     public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP) {
         var otpEncoded = passwordEncoder.encode(enteredOTP);
+        LocalDateTime now = LocalDateTime.now();
         var notExpiredOtp = otpRepository.findByUserId(fitnessFolks.getId())
                 .stream()
                 .filter(
-                        e -> e.getExpiry().isAfter(LocalDateTime.now()) && otpEncoded.equals(e.getOtpEncoded())
-                );
+                        e -> e.getExpiry().isAfter(now) && otpEncoded.equals(e.getOtpEncoded())
+                ).toList();
 
-        return notExpiredOtp.findAny().isPresent();
+        var isValid = !notExpiredOtp.isEmpty();
+        if (isValid) {
+            notExpiredOtp.forEach(e -> e.setExpiry(now));
+        }
+        return isValid;
     }
 }
