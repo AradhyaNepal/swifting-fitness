@@ -9,6 +9,7 @@ import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,20 +26,42 @@ public class AuthService {
 
 
     public AuthenticatedResponse login(LoginRequest request) throws CustomException {
-        var authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        if (authentication.isAuthenticated()) {
-            var user = userRepo.findByEmail(request.getEmail());
-            if (user.isPresent()) {
-                var accessToken = jwtService.generateToken(user.get());
-                return AuthenticatedResponse.builder().accessToken(accessToken).build();
-            } else {
+        var user = userRepo.findByEmail(request.getEmail());
+        try {
+            var authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+            if (authentication.isAuthenticated()) {
+                if (user.isPresent()) {
+                    var accessToken = jwtService.generateToken(user.get());
+                    return AuthenticatedResponse.builder().accessToken(accessToken).build();
+                } else {
 
-                throw new CustomException(StringConstants.noUserFromThatUsername);
+                    throw new CustomException(StringConstants.noUserFromThatUsername);
+
+                }
+            } else {
+                throw new CustomException(StringConstants.invalidCredentials);
+            }
+        } catch (AuthenticationException se) {
+            if (user.isPresent()) {
+                var userGet = user.get();
+                var wrongAttempts = userGet.getWrongAttempts() + 1;
+                var now = LocalDateTime.now();
+                if (userGet.getIsBlockedTill().isAfter(now)) {
+                    throw se;
+                }
+                if (wrongAttempts >= 5) {
+                    userGet.setWrongAttempts(0);
+                    userGet.setIsBlockedTill(LocalDateTime.now().plusHours(2));
+                } else {
+                    userGet.setWrongAttempts(wrongAttempts);
+                }
+                userRepo.save(userGet);
+
 
             }
-        } else {
-            throw new CustomException(StringConstants.invalidCredentials);
+            throw se;
         }
+
     }
 
     public void register(RegisterRequest request) throws CustomException {
