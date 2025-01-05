@@ -81,6 +81,7 @@ public class FitnessFolks implements UserDetails {
         return LocalDateTime.now().isAfter(isBlockedTill);
     }
 
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;

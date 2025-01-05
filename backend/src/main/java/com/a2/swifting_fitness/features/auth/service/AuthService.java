@@ -26,66 +26,80 @@ public class AuthService {
 
 
     public AuthenticatedResponse login(LoginRequest request) throws CustomException {
-        var user = userRepo.findByEmail(request.getEmail());
         try {
-            var authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-            if (authentication.isAuthenticated()) {
+            var user = userRepo.findByEmail(request.getEmail());
+            try {
+                var authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+                if (authentication.isAuthenticated()) {
+                    if (user.isPresent()) {
+                        var accessToken = jwtService.generateToken(user.get());
+                        return AuthenticatedResponse.builder().accessToken(accessToken).build();
+                    } else {
+
+                        throw new CustomException(StringConstants.noUserFromThatUsername);
+
+                    }
+                } else {
+                    throw new CustomException(StringConstants.invalidCredentials);
+                }
+            } catch (AuthenticationException se) {
                 if (user.isPresent()) {
-                    var accessToken = jwtService.generateToken(user.get());
-                    return AuthenticatedResponse.builder().accessToken(accessToken).build();
-                } else {
+                    var userGet = user.get();
+                    var wrongAttempts = userGet.getWrongAttempts() + 1;
+                    var now = LocalDateTime.now();
+                    var blockedTill = userGet.getIsBlockedTill();
+                    if (blockedTill == null || blockedTill.isAfter(now)) {
+                        throw new CustomException(se.getMessage());
+                    }
+                    if (wrongAttempts >= 5) {
+                        userGet.setWrongAttempts(0);
+                        userGet.setIsBlockedTill(LocalDateTime.now().plusHours(2));
+                    } else {
+                        userGet.setWrongAttempts(wrongAttempts);
+                    }
+                    userRepo.save(userGet);
 
-                    throw new CustomException(StringConstants.noUserFromThatUsername);
 
                 }
-            } else {
-                throw new CustomException(StringConstants.invalidCredentials);
+                throw new CustomException(se.getMessage());
             }
-        } catch (AuthenticationException se) {
-            if (user.isPresent()) {
-                var userGet = user.get();
-                var wrongAttempts = userGet.getWrongAttempts() + 1;
-                var now = LocalDateTime.now();
-                if (userGet.getIsBlockedTill().isAfter(now)) {
-                    throw se;
-                }
-                if (wrongAttempts >= 5) {
-                    userGet.setWrongAttempts(0);
-                    userGet.setIsBlockedTill(LocalDateTime.now().plusHours(2));
-                } else {
-                    userGet.setWrongAttempts(wrongAttempts);
-                }
-                userRepo.save(userGet);
-
-
-            }
-            throw se;
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
         }
+
 
     }
 
     public void register(RegisterRequest request) throws CustomException {
-        var existingUser = userRepo.findByEmail(request.getEmail());
-        if (existingUser.isPresent()) {
-            throw new CustomException(StringConstants.emailAlreadyExist);
+        try {
+            var existingUser = userRepo.preexistingUserToRegister(request.getEmail());
+            if (existingUser.isPresent()) {
+                throw new CustomException(StringConstants.emailAlreadyExist);
+            }
+            var user = userRepo.save(FitnessFolks.builder()
+                    .fullName(request.getFullName())
+                    .age(request.getAge())
+                    .email(request.getEmail())
+                    .gender(request.getGender())
+                    .build());
+            otpService.generateAndSendOTP(user);
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
         }
-        var user = userRepo.save(FitnessFolks.builder()
-                .fullName(request.getFullName())
-                .age(request.getAge())
-                .email(request.getEmail())
-                .gender(request.getGender())
-                .build());
-        otpService.generateAndSendOTP(user);
     }
 
     public void verifyOTP(VerifyOTPRequest request) throws CustomException {
-        var user = userRepo.findByEmail(request.getEmail());
-        if (user.isPresent()) {
-            var userGet = user.get();
-            var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), false);
-            updateWrongAttemptAndUpdateUser(userGet, otpIsValid);
-        } else {
-            throw new CustomException(StringConstants.noUserFromThatUsername);
+        try {
+            var user = userRepo.findByEmail(request.getEmail());
+            if (user.isPresent()) {
+                var userGet = user.get();
+                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), false);
+                updateWrongAttemptAndUpdateUser(userGet, otpIsValid);
+            } else {
+                throw new CustomException(StringConstants.noUserFromThatUsername);
+            }
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
         }
     }
 
@@ -113,35 +127,51 @@ public class AuthService {
 
 
     public void sendOTPToEmail(SendOTPToEmailRequest request) throws CustomException {
-        var user = userRepo.findByEmail(request.getEmail());
-        if (user.isPresent()) {
-            otpService.generateAndSendOTP(user.get());
-        } else {
-            throw new CustomException(StringConstants.noUserFromThatUsername);
+        try {
+
+
+            var user = userRepo.findByEmail(request.getEmail());
+            if (user.isPresent()) {
+                otpService.generateAndSendOTP(user.get());
+            } else {
+                throw new CustomException(StringConstants.noUserFromThatUsername);
+            }
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
         }
     }
 
     public AuthenticatedResponse setRegisterPassword(SetPasswordRequest request) throws CustomException {
-        var accessToken = jwtService.generateToken(setPassword(request));
-        return AuthenticatedResponse.builder().accessToken(accessToken).build();
+        try {
+
+
+            var accessToken = jwtService.generateToken(setPassword(request));
+            return AuthenticatedResponse.builder().accessToken(accessToken).build();
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
+        }
     }
 
     public FitnessFolks setPassword(SetPasswordRequest request) throws CustomException {
-        var user = userRepo.findByEmail(request.getEmail());
-        if (user.isPresent()) {
-            var userGet = user.get();
-            var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), true);
-            if (otpIsValid) {
-                userGet.setPassword(passwordEncoder.encode(request.getPassword()));
-                updateWrongAttemptAndUpdateUser(userGet, true);
-                return userGet;
-            } else {
-                updateWrongAttemptAndUpdateUser(userGet, false);
-                throw new CustomException(StringConstants.invalidOTP);
-            }
+        try {
+            var user = userRepo.findByEmail(request.getEmail());
+            if (user.isPresent()) {
+                var userGet = user.get();
+                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), true);
+                if (otpIsValid) {
+                    userGet.setPassword(passwordEncoder.encode(request.getPassword()));
+                    updateWrongAttemptAndUpdateUser(userGet, true);
+                    return userGet;
+                } else {
+                    updateWrongAttemptAndUpdateUser(userGet, false);
+                    throw new CustomException(StringConstants.invalidOTP);
+                }
 
-        } else {
-            throw new CustomException(StringConstants.noUserFromThatUsername);
+            } else {
+                throw new CustomException(StringConstants.noUserFromThatUsername);
+            }
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
         }
     }
 

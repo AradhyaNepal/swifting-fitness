@@ -17,4 +17,7 @@ public interface FitnessFolksRepository extends JpaRepository<FitnessFolks, Inte
     @Query("SELECT p FROM FitnessFolks p WHERE p.email = :email")
     Optional<FitnessFolks> findByEmail(@Param("email") String email);
 
+    @Query("SELECT p FROM FitnessFolks p WHERE p.email = :email AND p.password IS NULL")
+    Optional<FitnessFolks> preexistingUserToRegister(@Param("email") String email);
+
 }
