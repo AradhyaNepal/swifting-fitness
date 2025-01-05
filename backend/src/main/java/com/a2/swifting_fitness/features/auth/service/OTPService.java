@@ -48,7 +48,7 @@ public class OTPService {
     }
 
     private List<UserOTP> checkAndExpireOldUser(FitnessFolks user, LocalDateTime now) throws CustomException {
-        var oldOTP = otpRepository.findByUserId(user.getId())
+        var oldOTP = otpRepository.findByUserId(user)
                 .stream().filter(e -> e.getExpiry().isAfter(now.minusMinutes(60))).toList();
         if (oldOTP.size() > 5) {
             throw new CustomException(StringConstants.sendingOTPLocked);
@@ -71,7 +71,7 @@ public class OTPService {
     public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid) {
         var otpEncoded = passwordEncoder.encode(enteredOTP);
         LocalDateTime now = LocalDateTime.now();
-        var notExpiredOtp = otpRepository.findByUserId(fitnessFolks.getId())
+        var notExpiredOtp = otpRepository.findByUserId(fitnessFolks)
                 .stream()
                 .filter(
                         e -> e.getExpiry().isAfter(now) && otpEncoded.equals(e.getOtpEncoded())

@@ -12,6 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserOTPRepository extends JpaRepository<UserOTP, Integer> {
-    @Query("SELECT p FROM UserOTP p WHERE p.user_id = :user_id")
-    List<UserOTP> findByUserId(@Param("user_id") int userId);
+    @Query("SELECT * FROM UserOTP p WHERE p.user = :user")
+    List<UserOTP> findByUserId(@Param("user") FitnessFolks user);
 }

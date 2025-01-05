@@ -32,6 +32,7 @@ public class AuthService {
                 var accessToken = jwtService.generateToken(user.get());
                 return AuthenticatedResponse.builder().accessToken(accessToken).build();
             } else {
+
                 throw new CustomException(StringConstants.noUserFromThatUsername);
 
             }
