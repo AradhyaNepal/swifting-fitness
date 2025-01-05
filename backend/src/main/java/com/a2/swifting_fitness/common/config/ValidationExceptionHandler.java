@@ -22,8 +22,13 @@ public class ValidationExceptionHandler {
     }
 
     @ExceptionHandler(CustomException.class)
-    public GenericResponseEntity<Void> handleCustomException(CustomException ex) {
-        return GenericResponseEntity.error(List.of(ex.getMessage()), ex.getStatus());
+    public GenericResponseEntity<?> handleCustomException(CustomException ex) {
+        var extraFlag = ex.getExtraFlags();
+        if (extraFlag == null) {
+            return GenericResponseEntity.error(List.of(ex.getMessage()), ex.getStatus());
+        }else{
+            return  GenericResponseEntity.errorWithErrorData(extraFlag,List.of(ex.getMessage()),ex.getStatus());
+        }
     }
 
 

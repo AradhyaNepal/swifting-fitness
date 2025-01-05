@@ -20,11 +20,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
+    private CustomAuthenticationFailureHandler failureHandler;
 
     @Bean
     SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login")
+                                .permitAll()
+                )
                 .authorizeHttpRequests(
                             auth -> auth
                                     .requestMatchers("/v3/api-docs/**",

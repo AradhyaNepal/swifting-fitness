@@ -8,13 +8,14 @@ import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -44,13 +45,27 @@ public class AuthService {
                     throw new CustomException(StringConstants.invalidCredentials);
                 }
             } catch (AuthenticationException se) {
+                Map<String, Boolean> extraFlag = null;
+                var message = se.getMessage();
+                if (se instanceof DisabledException) {
+                    extraFlag = new HashMap<>();
+                    extraFlag.put("registrationNotCompleted", true);
+                    message = "Your account setup isn't completed yet, due to which your account is currently disabled."
+                } else if (se instanceof LockedException) {
+
+                    message = "Your account has been locked for few hours. It might be due to lots of wrong attempts.";
+                } else if (se instanceof BadCredentialsException) {
+                    message = "Invalid username or password.";
+                }
+
                 if (user.isPresent()) {
+
                     var userGet = user.get();
                     var wrongAttempts = userGet.getWrongAttempts() + 1;
                     var now = LocalDateTime.now();
                     var blockedTill = userGet.getIsBlockedTill();
                     if (blockedTill != null && blockedTill.isAfter(now)) {
-                        throw new CustomException(se.getMessage(), HttpStatus.FORBIDDEN);
+                        throw new CustomException(message, HttpStatus.FORBIDDEN, extraFlag);
                     }
                     if (wrongAttempts >= 5) {
                         userGet.setWrongAttempts(0);
@@ -60,17 +75,14 @@ public class AuthService {
                     }
                     userRepo.save(userGet);
 
-
                 }
-                throw new CustomException(se.getMessage(), HttpStatus.FORBIDDEN);
+                throw new CustomException(message, HttpStatus.FORBIDDEN, extraFlag);
             }
         } catch (CustomException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
-
 
 
     }
