@@ -33,7 +33,7 @@ public class RegisterController {
 
     @PostMapping(value = "/resend-otp")
     public GenericResponseEntity<Void> resendOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
-        service.resendOTP(request);
+        service.sendOTPToEmail(request);
         return GenericResponseEntity.success(null, StringConstants.emailSentSuccessfully);
     }
 

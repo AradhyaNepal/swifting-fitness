@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.features.auth.controller;
 
+import com.a2.swifting_fitness.common.CustomException;
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
 import com.a2.swifting_fitness.common.StringConstants;
 import com.a2.swifting_fitness.features.auth.dto.SendOTPToEmailRequest;
@@ -20,17 +21,26 @@ public class ForgotPasswordController {
     final private AuthService service;
 
     @PostMapping()
-    public GenericResponseEntity<Void> forgotPassword(@RequestBody @Valid SendOTPToEmailRequest request) {
+    public GenericResponseEntity<Void> forgotPassword(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
+        service.sendOTPToEmail(request);
+        return GenericResponseEntity.success(null, StringConstants.emailSentSuccessfully);
+    }
+
+    @PostMapping()
+    public GenericResponseEntity<Void> resendOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
+        service.sendOTPToEmail(request);
         return GenericResponseEntity.success(null, StringConstants.emailSentSuccessfully);
     }
 
     @PostMapping(value = "verify-otp")
-    public GenericResponseEntity<Void> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) {
+    public GenericResponseEntity<Void> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) throws CustomException {
+        service.verifyOTP(request);
         return GenericResponseEntity.success(null, StringConstants.otpVerifiedSuccessfully);
     }
 
     @PostMapping(value = "set-password")
-    public GenericResponseEntity<Void> setPassword(@RequestBody @Valid SetPasswordRequest request) {
+    public GenericResponseEntity<Void> setPassword(@RequestBody @Valid SetPasswordRequest request) throws CustomException {
+        service.setPassword(request);
         return GenericResponseEntity.success(null, StringConstants.passwordChangedSuccessfullyPleaseLogin);
     }
 

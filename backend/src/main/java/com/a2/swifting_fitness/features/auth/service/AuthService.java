@@ -107,7 +107,7 @@ public class AuthService {
     }
 
 
-    public void resendOTP(SendOTPToEmailRequest request) throws CustomException {
+    public void sendOTPToEmail(SendOTPToEmailRequest request) throws CustomException {
         var user = userRepo.findByEmail(request.getEmail());
         if (user.isPresent()) {
             otpService.generateAndSendOTP(user.get());
