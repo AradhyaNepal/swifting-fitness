@@ -23,7 +23,7 @@ public class ValidationExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public GenericResponseEntity<Void> handleCustomException(CustomException ex) {
-        return GenericResponseEntity.error(List.of(ex.getMessage()), HttpStatus.CONFLICT);
+        return GenericResponseEntity.error(List.of(ex.getMessage()), ex.getStatus());
     }
 
 

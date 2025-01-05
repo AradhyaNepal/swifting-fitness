@@ -7,6 +7,7 @@ import com.a2.swifting_fitness.features.auth.dto.*;
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -48,8 +49,8 @@ public class AuthService {
                     var wrongAttempts = userGet.getWrongAttempts() + 1;
                     var now = LocalDateTime.now();
                     var blockedTill = userGet.getIsBlockedTill();
-                    if (blockedTill == null || blockedTill.isAfter(now)) {
-                        throw new CustomException(se.getMessage());
+                    if (blockedTill != null && blockedTill.isAfter(now)) {
+                        throw new CustomException(se.getMessage(), HttpStatus.FORBIDDEN);
                     }
                     if (wrongAttempts >= 5) {
                         userGet.setWrongAttempts(0);
@@ -61,11 +62,15 @@ public class AuthService {
 
 
                 }
-                throw new CustomException(se.getMessage());
+                throw new CustomException(se.getMessage(), HttpStatus.FORBIDDEN);
             }
-        } catch (Exception e) {
+        } catch (CustomException e) {
+            throw e;
+        }
+        catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
+
 
 
     }
