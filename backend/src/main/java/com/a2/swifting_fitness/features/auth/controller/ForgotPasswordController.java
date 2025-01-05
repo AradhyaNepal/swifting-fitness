@@ -23,25 +23,25 @@ public class ForgotPasswordController {
     @PostMapping()
     public GenericResponseEntity<Void> forgotPassword(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
         service.sendOTPToEmail(request);
-        return GenericResponseEntity.success(null, StringConstants.emailSentSuccessfully);
+        return new GenericResponseEntity<>(null, StringConstants.emailSentSuccessfully);
     }
 
     @PostMapping(value = "resend-otp")
     public GenericResponseEntity<Void> resendOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
         service.sendOTPToEmail(request);
-        return GenericResponseEntity.success(null, StringConstants.emailSentSuccessfully);
+        return new GenericResponseEntity<>(null, StringConstants.emailSentSuccessfully);
     }
 
     @PostMapping(value = "verify-otp")
     public GenericResponseEntity<Void> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) throws CustomException {
         service.verifyOTP(request);
-        return GenericResponseEntity.success(null, StringConstants.otpVerifiedSuccessfully);
+        return new GenericResponseEntity<>(null, StringConstants.otpVerifiedSuccessfully);
     }
 
     @PostMapping(value = "set-password")
     public GenericResponseEntity<Void> setPassword(@RequestBody @Valid SetPasswordRequest request) throws CustomException {
         service.setPassword(request);
-        return GenericResponseEntity.success(null, StringConstants.passwordChangedSuccessfullyPleaseLogin);
+        return new GenericResponseEntity<>(null, StringConstants.passwordChangedSuccessfullyPleaseLogin);
     }
 
 

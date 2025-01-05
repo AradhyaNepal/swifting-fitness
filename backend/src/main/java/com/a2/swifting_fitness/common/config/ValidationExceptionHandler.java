@@ -9,11 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 public class ValidationExceptionHandler {
 
 //    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public GenericResponseEntity<?> notValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        StringBuilder error = new StringBuilder();
-        for (var e : ex.getAllErrors()) {
-            error.append("\n").append(e.getDefaultMessage());
-        }
-        return GenericResponseEntity.error(error.toString(), HttpStatus.BAD_REQUEST);
-    }
+//    public GenericResponseEntity<?> notValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
+//        StringBuilder error = new StringBuilder();
+//        for (var e : ex.getAllErrors()) {
+//            error.append("\n").append(e.getDefaultMessage());
+//        }
+//        return GenericResponseEntity.error(error.toString(), HttpStatus.BAD_REQUEST);
+//    }
 }

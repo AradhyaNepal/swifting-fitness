@@ -6,23 +6,24 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
-public class GenericResponseEntity<T> extends ResponseEntity<GenericResponse<T>> {
-    public GenericResponseEntity(GenericResponse<T> data, HttpStatus status) {
+
+public class GenericResponseEntity<T> extends ResponseEntity<GenericResponse> {
+    public GenericResponseEntity(GenericResponse data, HttpStatus status) {
         super(data, status);
     }
 
-    public static <T> GenericResponseEntity<T> success(T data, String message) {
-        return new GenericResponseEntity<T>(new GenericSuccessResponse<>(data, message), HttpStatus.OK);
+    public GenericResponseEntity(T data, String message) {
+        super(new GenericSuccessResponse<>(data, message), HttpStatus.OK);
     }
 
 
-    public static <T> GenericResponseEntity<T> error(String error, HttpStatus code) {
-        return new GenericResponseEntity<>(new GenericErrorResponse<>(error), code);
-    }
-
-    public static <T> GenericResponseEntity<T> error(String error, HttpStatus code, Map<String, Boolean> flags) {
-        return new GenericResponseEntity<T>(new GenericErrorResponse<>(error, flags), code);
-    }
+//    public static <T> GenericResponseEntity error(String error, HttpStatus code) {
+//        return new GenericResponseEntity(new GenericErrorResponse<>(error, null), code);
+//    }
+//
+//    public static <T> GenericResponseEntity error(String error, HttpStatus code, T flags) {
+//        return new GenericResponseEntity(new GenericErrorResponse<>(error, flags), code);
+//    }
 
 
 }

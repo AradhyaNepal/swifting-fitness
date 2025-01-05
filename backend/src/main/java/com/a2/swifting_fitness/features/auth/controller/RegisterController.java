@@ -22,24 +22,24 @@ public class RegisterController {
     @PostMapping()
     public GenericResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) throws CustomException {
         service.register(request);
-        return GenericResponseEntity.success(null, StringConstants.registerSuccessfully);
+        return  new GenericResponseEntity<>(null, StringConstants.registerSuccessfully);
     }
 
     @PostMapping(value = "/verify-otp")
     public GenericResponseEntity<Void> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) throws CustomException {
         service.verifyOTP(request);
-        return GenericResponseEntity.success(null, StringConstants.otpVerifiedSuccessfully);
+        return  new GenericResponseEntity<>(null, StringConstants.otpVerifiedSuccessfully);
     }
 
     @PostMapping(value = "/resend-otp")
     public GenericResponseEntity<Void> resendOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
         service.sendOTPToEmail(request);
-        return GenericResponseEntity.success(null, StringConstants.emailSentSuccessfully);
+        return  new GenericResponseEntity<>(null, StringConstants.emailSentSuccessfully);
     }
 
     @PostMapping(value = "/set-password")
     public GenericResponseEntity<AuthenticatedResponse> setPassword(@RequestBody @Valid SetPasswordRequest request) throws CustomException {
-        return GenericResponseEntity.success(service.setRegisterPassword(request), StringConstants.passwordSetSuccessfully);
+        return  new GenericResponseEntity<>(AuthenticatedResponse.builder().build(), StringConstants.passwordSetSuccessfully);
     }
 
 }

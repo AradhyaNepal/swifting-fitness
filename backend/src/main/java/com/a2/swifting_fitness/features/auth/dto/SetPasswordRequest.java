@@ -17,6 +17,6 @@ public class SetPasswordRequest {
     private String otp;
 
     @Pattern(regexp = ValidationConstant.passwordRegex, message = StringConstants.passwordRegexMessage)
-    @Min(value = ValidationConstant.passwordMinLength, message = StringConstants.passwordMinLengthMessage)
+    @Size(min = ValidationConstant.passwordMinLength, message = StringConstants.passwordMinLengthMessage)
     private String password;
 }

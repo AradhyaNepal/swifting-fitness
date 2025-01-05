@@ -2,49 +2,37 @@ package com.a2.swifting_fitness.common.model;
 
 import lombok.*;
 
-import java.util.Map;
+
+@Data
+abstract public class GenericResponse {
+}
 
 
-@Getter
+@EqualsAndHashCode(callSuper = true)
+@Data
+@AllArgsConstructor
+@Builder
+class GenericSuccessResponse<T> extends GenericResponse {
 
-abstract public class GenericResponse<T> {
-    final private T data;
+    private final String message;
+    private final T data;
 
-    public GenericResponse(T data) {
+    public GenericSuccessResponse(T data, String message) {
+        this.message = message;
         this.data = data;
     }
 
+
 }
 
-@Getter
-class GenericSuccessResponse<T> extends GenericResponse<T> {
-
-    final private String message;
-
-    @Builder
-    public GenericSuccessResponse(T data, String message) {
-        super(data);
-        this.message = message;
-    }
-}
-
-@Getter
-class GenericErrorResponse<T> extends GenericResponse<T> {
+@EqualsAndHashCode(callSuper = true)
+@Data
+@AllArgsConstructor
+@Builder
+class GenericErrorResponse<T> extends GenericResponse {
     final private String error;
-    final private Map<String, Boolean> flags;
+    final private T errorFlags;
 
-
-    public GenericErrorResponse(String error) {
-        super(null);
-        this.error = error;
-        this.flags = null;
-    }
-    @Builder
-    public GenericErrorResponse(String error, Map<String, Boolean> flags) {
-        super(null);
-        this.error = error;
-        this.flags = flags;
-    }
 }
 
 
