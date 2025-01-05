@@ -26,7 +26,7 @@ public class ForgotPasswordController {
         return GenericResponseEntity.success(null, StringConstants.emailSentSuccessfully);
     }
 
-    @PostMapping()
+    @PostMapping(value = "resend-otp")
     public GenericResponseEntity<Void> resendOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
         service.sendOTPToEmail(request);
         return GenericResponseEntity.success(null, StringConstants.emailSentSuccessfully);

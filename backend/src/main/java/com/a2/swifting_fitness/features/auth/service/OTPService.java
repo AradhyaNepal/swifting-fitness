@@ -10,13 +10,9 @@ import com.a2.swifting_fitness.features.auth.repository.UserOTPRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.apache.commons.lang3.BooleanUtils.forEach;
 
 @Service
 @AllArgsConstructor
@@ -48,7 +44,7 @@ public class OTPService {
     }
 
     private List<UserOTP> checkAndExpireOldUser(FitnessFolks user, LocalDateTime now) throws CustomException {
-        var oldOTP = otpRepository.findByUserId(user)
+        var oldOTP = otpRepository.findByUserId(user.getId())
                 .stream().filter(e -> e.getExpiry().isAfter(now.minusMinutes(60))).toList();
         if (oldOTP.size() > 5) {
             throw new CustomException(StringConstants.sendingOTPLocked);
@@ -69,12 +65,11 @@ public class OTPService {
     }
 
     public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid) {
-        var otpEncoded = passwordEncoder.encode(enteredOTP);
         LocalDateTime now = LocalDateTime.now();
-        var notExpiredOtp = otpRepository.findByUserId(fitnessFolks)
+        var notExpiredOtp = otpRepository.findByUserId(fitnessFolks.getId())
                 .stream()
                 .filter(
-                        e -> e.getExpiry().isAfter(now) && otpEncoded.equals(e.getOtpEncoded())
+                        e -> e.getExpiry().isAfter(now) && passwordEncoder.matches(enteredOTP,e.getOtpEncoded())
                 ).toList();
 
         var isValid = !notExpiredOtp.isEmpty();

@@ -50,12 +50,13 @@ public class FitnessFolks implements UserDetails {
         return uid;
     }
 
-    @NotNull
+
     private String password;
 
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
 
     @Column(unique = true, nullable = false, updatable = false)
     private String uid;

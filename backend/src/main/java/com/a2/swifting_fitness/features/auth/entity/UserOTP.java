@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "FitnessFolks")
+@Table(name = "UserOTP")
 public class UserOTP {
     @Id
     @GeneratedValue

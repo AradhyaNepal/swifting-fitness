@@ -83,14 +83,19 @@ public class AuthService {
         if (user.isPresent()) {
             var userGet = user.get();
             var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), false);
-            if (otpIsValid) return;
-            updateWrongAttempt(userGet);
+            updateWrongAttemptAndUpdateUser(userGet, otpIsValid);
         } else {
             throw new CustomException(StringConstants.noUserFromThatUsername);
         }
     }
 
-    private void updateWrongAttempt(FitnessFolks userGet) throws CustomException {
+    private void updateWrongAttemptAndUpdateUser(FitnessFolks userGet, boolean isValid) throws CustomException {
+        if (isValid) {
+            userGet.setWrongAttempts(0);
+            userGet.setIsBlockedTill(null);
+            userRepo.save(userGet);
+            return;
+        }
         var wrongAttempt = userGet.getWrongAttempts() + 1;
         var totalAttempt = 5;
         if (wrongAttempt == totalAttempt) {
@@ -128,10 +133,10 @@ public class AuthService {
             var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), true);
             if (otpIsValid) {
                 userGet.setPassword(passwordEncoder.encode(request.getPassword()));
-                userRepo.save(userGet);
+                updateWrongAttemptAndUpdateUser(userGet, true);
                 return userGet;
             } else {
-                updateWrongAttempt(userGet);
+                updateWrongAttemptAndUpdateUser(userGet, false);
                 throw new CustomException(StringConstants.invalidOTP);
             }
 
