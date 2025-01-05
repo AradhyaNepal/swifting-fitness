@@ -2,7 +2,6 @@ package com.a2.swifting_fitness.features.auth.config;
 //eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZmEzZDNmNi1kZDM4LTRiMjktOWQyNC03YTUzZjU4YWY1YTUiLCJpYXQiOjE3MzI5NjQwNjIsImV4cCI6MTczMjk2NTUwMn0.IpRggJAgrKUvjh0DM14gmhr1ROQZaD847SwIltSs14U
 
 
-import com.a2.swifting_fitness.common.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
-    private CustomAuthenticationFailureHandler failureHandler;
+
 
     @Bean
     SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {

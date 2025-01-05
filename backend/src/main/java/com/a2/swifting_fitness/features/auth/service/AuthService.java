@@ -50,7 +50,7 @@ public class AuthService {
                 if (se instanceof DisabledException) {
                     extraFlag = new HashMap<>();
                     extraFlag.put("registrationNotCompleted", true);
-                    message = "Your account setup isn't completed yet, due to which your account is currently disabled."
+                    message = "Your account setup isn't completed yet, due to which your account is currently disabled.";;
                 } else if (se instanceof LockedException) {
 
                     message = "Your account has been locked for few hours. It might be due to lots of wrong attempts.";
