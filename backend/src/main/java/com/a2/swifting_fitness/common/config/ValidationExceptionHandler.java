@@ -1,19 +1,21 @@
-package com.a2.swifting_fitness.common.config;
-import com.a2.swifting_fitness.common.model.GenericResponseEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import jakarta.servlet.http.HttpServletRequest;
-
+//package com.a2.swifting_fitness.common.config;
+//
+//import com.a2.swifting_fitness.common.model.GenericResponse;
+//import jakarta.servlet.http.HttpServletRequest;
+//import org.springframework.context.support.DefaultMessageSourceResolvable;
+//import org.springframework.http.HttpStatus;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.web.bind.MethodArgumentNotValidException;
+//import org.springframework.web.bind.annotation.ControllerAdvice;
+//import org.springframework.web.bind.annotation.ExceptionHandler;
+//
 //@ControllerAdvice
-public class ValidationExceptionHandler {
-
+//public class ValidationExceptionHandler {
+//
 //    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public GenericResponseEntity<?> notValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
+//    public ResponseEntity<GenericResponse<Void>> notValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
 //        StringBuilder error = new StringBuilder();
-//        for (var e : ex.getAllErrors()) {
-//            error.append("\n").append(e.getDefaultMessage());
-//        }
-//        return GenericResponseEntity.error(error.toString(), HttpStatus.BAD_REQUEST);
+//        var errors = ex.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
+//        return GenericResponse.error(errors, HttpStatus.BAD_REQUEST);
 //    }
-}
+//}
