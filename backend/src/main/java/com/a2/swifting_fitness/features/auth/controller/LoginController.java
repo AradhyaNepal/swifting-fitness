@@ -21,7 +21,7 @@ public class LoginController {
 
     @PostMapping()
     public GenericResponseEntity<AuthenticatedResponse> login(@RequestBody @Valid LoginRequest request) throws CustomException {
-        return new GenericResponseEntity<>(service.login(request),
+        return GenericResponseEntity.successWithData(service.login(request),
                 StringConstants.loggedInSuccessfully);
     }
 

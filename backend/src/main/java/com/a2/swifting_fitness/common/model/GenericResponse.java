@@ -1,38 +1,12 @@
 package com.a2.swifting_fitness.common.model;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+
+import java.util.List;
 
 
-@Data
-abstract public class GenericResponse {
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record GenericResponse<T>(T data, String message,List<String> errors) {
 }
-
-
-@EqualsAndHashCode(callSuper = true)
-@Data
-@AllArgsConstructor
-@Builder
-class GenericSuccessResponse<T> extends GenericResponse {
-
-    private final String message;
-    private final T data;
-
-    public GenericSuccessResponse(T data, String message) {
-        this.message = message;
-        this.data = data;
-    }
-
-
-}
-
-@EqualsAndHashCode(callSuper = true)
-@Data
-@AllArgsConstructor
-@Builder
-class GenericErrorResponse<T> extends GenericResponse {
-    final private String error;
-    final private T errorFlags;
-
-}
-
-

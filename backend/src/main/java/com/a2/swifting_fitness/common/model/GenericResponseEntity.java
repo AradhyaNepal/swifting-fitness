@@ -1,33 +1,33 @@
 package com.a2.swifting_fitness.common.model;
 
-
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Map;
+import java.util.List;
+
+@Getter
+public class GenericResponseEntity<T> extends ResponseEntity<GenericResponse<T>> {
 
 
-public class GenericResponseEntity<T> extends ResponseEntity<GenericResponse> {
-    public GenericResponseEntity(GenericResponse data, HttpStatus status) {
-        super(data, status);
+    private GenericResponseEntity(T data, String message, HttpStatus status, List<String> errors) {
+        super(new GenericResponse<>(data, message, errors), status);
     }
 
-    public GenericResponseEntity(T data, String message) {
-        super(new GenericSuccessResponse<>(data, message), HttpStatus.OK);
+
+    public static <T> GenericResponseEntity<T> successWithData(T data, String message) {
+        return new GenericResponseEntity<>(data, message, HttpStatus.OK, null);
+    }
+
+    public static GenericResponseEntity<Void> successMessage(String message) {
+        return new GenericResponseEntity<>(null, message, HttpStatus.OK, null);
     }
 
 
-//    public static <T> GenericResponseEntity error(String error, HttpStatus code) {
-//        return new GenericResponseEntity(new GenericErrorResponse<>(error, null), code);
-//    }
-//
-//    public static <T> GenericResponseEntity error(String error, HttpStatus code, T flags) {
-//        return new GenericResponseEntity(new GenericErrorResponse<>(error, flags), code);
-//    }
-
-
+    public static GenericResponseEntity<Void> errors(List<String> errors, HttpStatus status) {
+        return new GenericResponseEntity<>(null, "Something went wrong!", status, errors);
+    }
+    public static GenericResponseEntity<Void> errorsWithFlags(List<String> errors, HttpStatus status) {
+        return new GenericResponseEntity<>(null, "Something went wrong!", status, errors);
+    }
 }
-
-
-
-

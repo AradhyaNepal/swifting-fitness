@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class AuthenticatedResponse {
     private String accessToken;
     private String refreshToken;
