@@ -47,6 +47,7 @@ public class OTPService {
 
     }
 
+    //Todo: 1
     private List<UserOTP> checkAndExpireOldUser(FitnessFolks user, Instant now,OTPPurpose purpose) throws CustomException {
         var oldOTP = otpRepository.findByUserIdAndPurpose(user.getId(),purpose)
                 .stream().filter(e -> e.getExpiry().isAfter(now.plus(60, ChronoUnit.MINUTES))).toList();
@@ -68,7 +69,11 @@ public class OTPService {
         return otp;
     }
 
-    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid,OTPPurpose purpose) {
+    //Todo: Two
+    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid,OTPPurpose purpose) throws CustomException {
+        if (!fitnessFolks.isAccountNonLocked()) {
+            throw new CustomException(StringConstants.userLockedCannotContinue);
+        }
         Instant now = Instant.now();
         var notExpiredOtp = otpRepository.findByUserIdAndPurpose(fitnessFolks.getId(),purpose)
                 .stream()

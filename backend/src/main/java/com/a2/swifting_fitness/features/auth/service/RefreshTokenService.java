@@ -52,7 +52,7 @@ public class RefreshTokenService {
             return createRefreshToken(user);
 
         } else {
-            blockUserService.blockUser(user);
+            blockUserService.setBlockUser(user);
             userRepository.save(user);
             throw new CustomException(StringConstants.invalidRefreshToken, HttpStatus.FORBIDDEN);
         }

@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +38,7 @@ public class AuthService {
                 if (authentication.isAuthenticated()) {
                     if (user.isPresent()) {
                         var userGet = user.get();
+                       blockUserService.removeUserAllBlockageAndSave(userGet,userRepo);
                         var accessToken = jwtService.generateToken(userGet);
                         var refreshToken = refreshTokenService.createRefreshToken(userGet).getToken();
                         return AuthenticatedResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
@@ -73,7 +73,7 @@ public class AuthService {
                     if (blockedTill != null && blockedTill.isAfter(now)) {
                         throw new CustomException(message, HttpStatus.FORBIDDEN, extraFlag);
                     }
-
+                    blockUserService.setBlockUser(userGet);
                     userRepo.save(userGet);
 
 
@@ -107,7 +107,7 @@ public class AuthService {
             user.setEmail(request.getEmail());
             user.setGender(request.getGender());
             user = userRepo.save(user);
-            otpService.generateAndSendOTP(user,OTPPurpose.register);
+            otpService.generateAndSendOTP(user, OTPPurpose.register);
             return previouslyRegistered;
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
@@ -119,8 +119,15 @@ public class AuthService {
             var user = userRepo.findByEmail(request.getEmail());
             if (user.isPresent()) {
                 var userGet = user.get();
-                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), false,purpose);
-                updateWrongAttemptAndUpdateUser(userGet, otpIsValid);
+                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), false, purpose);
+                if(otpIsValid){
+                    blockUserService.removeUserAllBlockageAndSave(userGet,userRepo);
+                }else{
+                    blockUserService.setBlockUser(userGet);
+                    throw new CustomException(StringConstants.invalidOTP);
+
+                }
+
             } else {
                 throw new CustomException(StringConstants.noUserFromThatUsername);
             }
@@ -129,36 +136,16 @@ public class AuthService {
         }
     }
 
-    private void updateWrongAttemptAndUpdateUser(FitnessFolks userGet, boolean isValid) throws CustomException {
-        if (isValid) {
-            userGet.setWrongAttempts(0);
-            userGet.setIsBlockedTill(null);
-            userRepo.save(userGet);
-            return;
-        }
-        var wrongAttempt = userGet.getWrongAttempts() + 1;
-        var totalAttempt = 5;
-        if (wrongAttempt == totalAttempt) {
-            userGet.setIsBlockedTill(Instant.now().plus(1, ChronoUnit.DAYS));
-            userGet.setWrongAttempts(0);
-            userRepo.save(userGet);
-            throw new CustomException(StringConstants.blockingUserDueToWrongTrial);
-        } else {
-            userGet.setWrongAttempts(wrongAttempt);
-            userRepo.save(userGet);
-            throw new CustomException(StringConstants.invalidOTP + (wrongAttempt == totalAttempt - 1 ? " Last One Attempt Left" : ""));
-
-        }
-    }
 
 
-    public void sendOTPToEmail(SendOTPToEmailRequest request,OTPPurpose purpose) throws CustomException {
+
+    public void sendOTPToEmail(SendOTPToEmailRequest request, OTPPurpose purpose) throws CustomException {
         try {
 
 
             var user = userRepo.findByEmail(request.getEmail());
             if (user.isPresent()) {
-                otpService.generateAndSendOTP(user.get(),purpose);
+                otpService.generateAndSendOTP(user.get(), purpose);
             } else {
                 throw new CustomException(StringConstants.noUserFromThatUsername);
             }
@@ -169,7 +156,7 @@ public class AuthService {
 
     public AuthenticatedResponse setRegisterPassword(SetPasswordRequest request) throws CustomException {
         try {
-            var user = setPassword(request,OTPPurpose.register);
+            var user = setPassword(request, OTPPurpose.register);
             var accessToken = jwtService.generateToken(user);
             var refreshToken = refreshTokenService.createRefreshToken(user).getToken();
             return AuthenticatedResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
@@ -178,18 +165,18 @@ public class AuthService {
         }
     }
 
-    public FitnessFolks setPassword(SetPasswordRequest request,OTPPurpose purpose) throws CustomException {
+    public FitnessFolks setPassword(SetPasswordRequest request, OTPPurpose purpose) throws CustomException {
         try {
             var user = userRepo.findByEmail(request.getEmail());
             if (user.isPresent()) {
                 var userGet = user.get();
-                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), true,purpose);
+                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), true, purpose);
                 if (otpIsValid) {
                     userGet.setPassword(passwordEncoder.encode(request.getPassword()));
-                    updateWrongAttemptAndUpdateUser(userGet, true);
+                    blockUserService.removeUserAllBlockageAndSave(userGet,userRepo);
                     return userGet;
                 } else {
-                    updateWrongAttemptAndUpdateUser(userGet, false);
+                   blockUserService.setBlockUser(userGet);
                     throw new CustomException(StringConstants.invalidOTP);
                 }
 
