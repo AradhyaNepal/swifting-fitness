@@ -13,7 +13,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "UserOTP")
+@Table(name = "RefreshToken")
 public class RefreshToken {
 
     @Id

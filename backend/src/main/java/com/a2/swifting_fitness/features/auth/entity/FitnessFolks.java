@@ -41,6 +41,7 @@ public class FitnessFolks implements UserDetails {
     @NotNull
     private int age;
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private int wrongAttempts;

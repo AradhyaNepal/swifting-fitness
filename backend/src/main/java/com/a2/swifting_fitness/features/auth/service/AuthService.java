@@ -12,6 +12,7 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class AuthService {
     final private JwtService jwtService;
     final private OTPService otpService;
     final private PasswordEncoder passwordEncoder;
+    final private RefreshTokenService refreshTokenService;
 
 
     public AuthenticatedResponse login(LoginRequest request) throws CustomException {
@@ -34,8 +36,10 @@ public class AuthService {
                 var authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
                 if (authentication.isAuthenticated()) {
                     if (user.isPresent()) {
-                        var accessToken = jwtService.generateToken(user.get());
-                        return AuthenticatedResponse.builder().accessToken(accessToken).build();
+                        var userGet = user.get();
+                        var accessToken = jwtService.generateToken(userGet);
+                        var refreshToken = refreshTokenService.createRefreshToken(userGet).getToken();
+                        return AuthenticatedResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
                     } else {
 
                         throw new CustomException(StringConstants.noUserFromThatUsername);
@@ -62,19 +66,14 @@ public class AuthService {
                 if (user.isPresent()) {
 
                     var userGet = user.get();
-                    var wrongAttempts = userGet.getWrongAttempts() + 1;
                     var now = Instant.now();
                     var blockedTill = userGet.getIsBlockedTill();
                     if (blockedTill != null && blockedTill.isAfter(now)) {
                         throw new CustomException(message, HttpStatus.FORBIDDEN, extraFlag);
                     }
-                    if (wrongAttempts >= 5) {
-                        userGet.setWrongAttempts(0);
-                        userGet.setIsBlockedTill(Instant.now().plus(2, ChronoUnit.HOURS));
-                    } else {
-                        userGet.setWrongAttempts(wrongAttempts);
-                    }
+                    blockUser(userGet);
                     userRepo.save(userGet);
+
 
                 }
                 throw new CustomException(message, HttpStatus.FORBIDDEN, extraFlag);
@@ -161,10 +160,10 @@ public class AuthService {
 
     public AuthenticatedResponse setRegisterPassword(SetPasswordRequest request) throws CustomException {
         try {
-
-
-            var accessToken = jwtService.generateToken(setPassword(request));
-            return AuthenticatedResponse.builder().accessToken(accessToken).build();
+            var user = setPassword(request);
+            var accessToken = jwtService.generateToken(user);
+            var refreshToken = refreshTokenService.createRefreshToken(user).getToken();
+            return AuthenticatedResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
@@ -192,6 +191,18 @@ public class AuthService {
             throw new CustomException(e.getMessage());
         }
     }
+
+    public void blockUser(FitnessFolks user) {
+        var wrongAttempts = user.getWrongAttempts() + 1;
+        if (wrongAttempts >= 5) {
+            user.setWrongAttempts(0);
+            user.setIsBlockedTill(Instant.now().plus(2, ChronoUnit.HOURS));
+        } else {
+            user.setWrongAttempts(wrongAttempts);
+        }
+    }
+
+
 
 
 }
