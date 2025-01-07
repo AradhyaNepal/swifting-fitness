@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -43,7 +44,7 @@ public class FitnessFolks implements UserDetails {
     private Gender gender;
 
     private int wrongAttempts;
-    private LocalDateTime isBlockedTill;
+    private Instant isBlockedTill;
 
 
     public @NotNull String getUsername() {
@@ -78,7 +79,7 @@ public class FitnessFolks implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         if (isBlockedTill == null) return true;
-        return LocalDateTime.now().isAfter(isBlockedTill);
+        return Instant.now().isAfter(isBlockedTill);
     }
 
 

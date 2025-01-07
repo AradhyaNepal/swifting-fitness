@@ -1,7 +1,6 @@
 package com.a2.swifting_fitness.features.auth.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,23 +10,18 @@ import java.time.Instant;
 
 @Entity
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "UserOTP")
-public class UserOTP {
+public class RefreshToken {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @NotNull
-    private  String otpEncoded;
-
-    @NotNull
-    private Instant expiry;
-
+    private String token;
+    private Instant expiryDate;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private FitnessFolks user;
-
+    @JoinColumn(name = "user_id",nullable = false)
+    private FitnessFolks userInfo;
 }

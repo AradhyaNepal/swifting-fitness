@@ -11,7 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -26,12 +27,12 @@ public class OTPService {
             throw new CustomException(StringConstants.userLockedCannotContinue);
         }
         StringBuilder otp = getSecureOTP();
-        var now = LocalDateTime.now();
+        var now = Instant.now();
         var oldOTP = checkAndExpireOldUser(user, now);
         otpRepository.saveAll(oldOTP);
         otpRepository.save(UserOTP.builder()
                 .user(user)
-                .expiry(now.plusMinutes(30))
+                .expiry(now.plus(30, ChronoUnit.MINUTES))
                 .otpEncoded(passwordEncoder.encode(otp.toString()))
                 .build());
         emailService.sendSimpleMail(
@@ -43,9 +44,9 @@ public class OTPService {
 
     }
 
-    private List<UserOTP> checkAndExpireOldUser(FitnessFolks user, LocalDateTime now) throws CustomException {
+    private List<UserOTP> checkAndExpireOldUser(FitnessFolks user, Instant now) throws CustomException {
         var oldOTP = otpRepository.findByUserId(user.getId())
-                .stream().filter(e -> e.getExpiry().isAfter(now.minusMinutes(60))).toList();
+                .stream().filter(e -> e.getExpiry().isAfter(now.plus(60, ChronoUnit.MINUTES))).toList();
         if (oldOTP.size() > 5) {
             throw new CustomException(StringConstants.sendingOTPLocked);
         }
@@ -65,11 +66,11 @@ public class OTPService {
     }
 
     public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid) {
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         var notExpiredOtp = otpRepository.findByUserId(fitnessFolks.getId())
                 .stream()
                 .filter(
-                        e -> e.getExpiry().isAfter(now) && passwordEncoder.matches(enteredOTP,e.getOtpEncoded())
+                        e -> e.getExpiry().isAfter(now) && passwordEncoder.matches(enteredOTP, e.getOtpEncoded())
                 ).toList();
 
         var isValid = !notExpiredOtp.isEmpty();

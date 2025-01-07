@@ -11,7 +11,6 @@ import lombok.Data;
 public class LoginRequest {
 
 
-
     @NotEmpty(message = StringConstants.emailRequired)
     @Email(message = StringConstants.emailNotValid)
     private String email;

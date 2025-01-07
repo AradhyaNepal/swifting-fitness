@@ -12,8 +12,8 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +50,8 @@ public class AuthService {
                 if (se instanceof DisabledException) {
                     extraFlag = new HashMap<>();
                     extraFlag.put("registrationNotCompleted", true);
-                    message = "Your account setup isn't completed yet, due to which your account is currently disabled.";;
+                    message = "Your account setup isn't completed yet, due to which your account is currently disabled.";
+                    ;
                 } else if (se instanceof LockedException) {
 
                     message = "Your account has been locked for few hours. It might be due to lots of wrong attempts.";
@@ -62,14 +63,14 @@ public class AuthService {
 
                     var userGet = user.get();
                     var wrongAttempts = userGet.getWrongAttempts() + 1;
-                    var now = LocalDateTime.now();
+                    var now = Instant.now();
                     var blockedTill = userGet.getIsBlockedTill();
                     if (blockedTill != null && blockedTill.isAfter(now)) {
                         throw new CustomException(message, HttpStatus.FORBIDDEN, extraFlag);
                     }
                     if (wrongAttempts >= 5) {
                         userGet.setWrongAttempts(0);
-                        userGet.setIsBlockedTill(LocalDateTime.now().plusHours(2));
+                        userGet.setIsBlockedTill(Instant.now().plus(2, ChronoUnit.HOURS));
                     } else {
                         userGet.setWrongAttempts(wrongAttempts);
                     }
@@ -130,7 +131,7 @@ public class AuthService {
         var wrongAttempt = userGet.getWrongAttempts() + 1;
         var totalAttempt = 5;
         if (wrongAttempt == totalAttempt) {
-            userGet.setIsBlockedTill(LocalDateTime.now().plusDays(1));
+            userGet.setIsBlockedTill(Instant.now().plus(1, ChronoUnit.DAYS));
             userGet.setWrongAttempts(0);
             userRepo.save(userGet);
             throw new CustomException(StringConstants.blockingUserDueToWrongTrial);

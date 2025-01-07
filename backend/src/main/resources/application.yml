@@ -1,3 +1,6 @@
+server:
+  ip: 192.168.11.38
+  port: 8080
 spring:
   application:
     name: swifting-fitness
