@@ -1,16 +1,16 @@
 package com.a2.swifting_fitness.common.config;
 
+import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
 @Service
 @AllArgsConstructor
-class MyUserDetailsService implements UserDetailsService {
+class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     final private FitnessFolksRepository userRepository;
 
@@ -21,7 +21,7 @@ class MyUserDetailsService implements UserDetailsService {
         if (user.isPresent()) {
             return user.get();
         } else {
-            throw new UsernameNotFoundException("User not found: ");
+            throw new UsernameNotFoundException(StringConstants.userNotFound);
         }
 
     }

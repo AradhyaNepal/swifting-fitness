@@ -29,7 +29,6 @@ public class JwtService {
                 .uid(value.get("sub").toString())
                 .role(UserRole.user)
                 .build();
-        //Role.valueOf(value.get(roleKey).toString())
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -46,7 +45,7 @@ public class JwtService {
         return Jwts.builder().claims(extraClaims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15))
                 .signWith(getKey(), Jwts.SIG.HS256)
                 .compact();
     }
@@ -67,7 +66,7 @@ public class JwtService {
 
 
     private Claims extractAllClaims(String token) {
-        token=token.replaceAll("Bearer ","");
+        token = token.replaceAll("Bearer ", "");
         return Jwts.parser()
                 .verifyWith(getKey())
                 .build()

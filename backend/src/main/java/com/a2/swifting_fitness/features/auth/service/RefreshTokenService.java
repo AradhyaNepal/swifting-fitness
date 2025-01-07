@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.features.auth.service;
 
+import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.entity.RefreshToken;
@@ -41,7 +42,7 @@ public class RefreshTokenService {
             var tokenGet = refreshToken.get();
             if (tokenGet.getExpiryDate().isBefore(now)) {
                 refreshTokenRepository.delete(tokenGet);
-                throw new CustomException("Refresh token is expired. Please make a new login..!", HttpStatus.FORBIDDEN);
+                throw new CustomException(StringConstants.refreshTokenExpired, HttpStatus.FORBIDDEN);
             }
             tokenGet.setExpiryDate(now);
             refreshTokenRepository.save(tokenGet);
@@ -50,7 +51,7 @@ public class RefreshTokenService {
         } else {
             blockUserService.blockUser(user);
             userRepository.save(user);
-            throw new CustomException("Invalid refresh token", HttpStatus.FORBIDDEN);
+            throw new CustomException(StringConstants.invalidRefreshToken, HttpStatus.FORBIDDEN);
         }
 
     }
