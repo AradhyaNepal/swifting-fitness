@@ -9,6 +9,8 @@ import com.a2.swifting_fitness.features.auth.dto.LoginRequest;
 import com.a2.swifting_fitness.features.auth.dto.TokenRefreshedResponse;
 import com.a2.swifting_fitness.features.auth.service.AuthService;
 import com.a2.swifting_fitness.features.auth.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/v1/auth/login")
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Authorization")
 public class LoginController {
     final private AuthService service;
     final private UserService userService;

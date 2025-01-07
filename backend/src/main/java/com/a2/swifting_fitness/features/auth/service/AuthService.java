@@ -72,7 +72,7 @@ public class AuthService {
                     if (blockedTill != null && blockedTill.isAfter(now)) {
                         throw new CustomException(message, HttpStatus.FORBIDDEN, extraFlag);
                     }
-                    blockUserService.blockUser(userGet);
+
                     userRepo.save(userGet);
 
 
