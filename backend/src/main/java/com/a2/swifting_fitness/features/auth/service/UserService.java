@@ -20,6 +20,8 @@ public class UserService {
 
     public TokenRefreshedResponse refreshToken(String refreshToken) throws CustomException {
         var uid = "placeholder";//Todo: Fetch from security context's JWT Token
+        var value=SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(value.getClass());
         var user = userRepo.findByUId(uid);
         if (user.isPresent()) {
             var userGet = user.get();

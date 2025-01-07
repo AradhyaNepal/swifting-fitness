@@ -27,6 +27,7 @@ public class AuthService {
     final private OTPService otpService;
     final private PasswordEncoder passwordEncoder;
     final private RefreshTokenService refreshTokenService;
+    final  private BlockUserService blockUserService;
 
 
     public AuthenticatedResponse login(LoginRequest request) throws CustomException {
@@ -71,7 +72,7 @@ public class AuthService {
                     if (blockedTill != null && blockedTill.isAfter(now)) {
                         throw new CustomException(message, HttpStatus.FORBIDDEN, extraFlag);
                     }
-                    blockUser(userGet);
+                    blockUserService.blockUser(userGet);
                     userRepo.save(userGet);
 
 
@@ -192,15 +193,7 @@ public class AuthService {
         }
     }
 
-    public void blockUser(FitnessFolks user) {
-        var wrongAttempts = user.getWrongAttempts() + 1;
-        if (wrongAttempts >= 5) {
-            user.setWrongAttempts(0);
-            user.setIsBlockedTill(Instant.now().plus(2, ChronoUnit.HOURS));
-        } else {
-            user.setWrongAttempts(wrongAttempts);
-        }
-    }
+
 
 
 

@@ -22,7 +22,7 @@ public class RefreshTokenService {
 
 
     private final FitnessFolksRepository userRepository;
-    private final AuthService authService;
+    private final BlockUserService blockUserService;
 
     public RefreshToken createRefreshToken(FitnessFolks user) {
         RefreshToken refreshToken = RefreshToken.builder()
@@ -48,14 +48,12 @@ public class RefreshTokenService {
             return createRefreshToken(user);
 
         } else {
-            authService.blockUser(user);
+            blockUserService.blockUser(user);
             userRepository.save(user);
             throw new CustomException("Invalid refresh token", HttpStatus.FORBIDDEN);
         }
 
     }
-
-
 
 
 }
