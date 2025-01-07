@@ -1,4 +1,4 @@
-package com.a2.swifting_fitness.features.auth.config;
+package com.a2.swifting_fitness.common.config;
 //eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZmEzZDNmNi1kZDM4LTRiMjktOWQyNC03YTUzZjU4YWY1YTUiLCJpYXQiOjE3MzI5NjQwNjIsImV4cCI6MTczMjk2NTUwMn0.IpRggJAgrKUvjh0DM14gmhr1ROQZaD847SwIltSs14U
 
 
@@ -31,7 +31,7 @@ public class SecurityConfiguration {
                                     .requestMatchers("/v3/api-docs/**",
                                             "/swagger-ui/**",
                                             "/swagger-ui.html",
-//                                            "/api/v1/auth/**",
+                                            "/api/v1/auth/**",
                                             "/assets/**").permitAll()
                                     .anyRequest().hasRole(UserRole.user.toRoleString())
                 )

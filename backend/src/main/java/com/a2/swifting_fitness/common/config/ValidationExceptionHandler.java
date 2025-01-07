@@ -1,6 +1,6 @@
 package com.a2.swifting_fitness.common.config;
 
-import com.a2.swifting_fitness.common.CustomException;
+import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

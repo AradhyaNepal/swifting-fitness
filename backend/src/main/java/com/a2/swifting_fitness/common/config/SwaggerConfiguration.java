@@ -1,4 +1,4 @@
-package com.a2.swifting_fitness.features.auth.config;
+package com.a2.swifting_fitness.common.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

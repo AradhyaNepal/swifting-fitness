@@ -1,8 +1,8 @@
 package com.a2.swifting_fitness.features.auth.service;
 
-import com.a2.swifting_fitness.common.CustomException;
-import com.a2.swifting_fitness.common.StringConstants;
-import com.a2.swifting_fitness.features.auth.config.JwtService;
+import com.a2.swifting_fitness.common.exception.CustomException;
+import com.a2.swifting_fitness.common.constants.StringConstants;
+import com.a2.swifting_fitness.common.config.JwtService;
 import com.a2.swifting_fitness.features.auth.dto.*;
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;

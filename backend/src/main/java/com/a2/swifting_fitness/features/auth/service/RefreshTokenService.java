@@ -1,6 +1,6 @@
 package com.a2.swifting_fitness.features.auth.service;
 
-import com.a2.swifting_fitness.common.CustomException;
+import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.entity.RefreshToken;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;

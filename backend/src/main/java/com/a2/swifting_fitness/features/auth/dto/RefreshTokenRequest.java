@@ -5,14 +5,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class VerifyOTPRequest {
-    @NotEmpty(message = StringConstants.emailRequired)
-    @Email(message = StringConstants.emailNotValid)
-    private String email;
-
-    @NotEmpty(message = StringConstants.otpRequired)
-    private String otp;
+@NoArgsConstructor
+public class RefreshTokenRequest {
+    @NotEmpty(message = StringConstants.refreshTokenRequired)
+    private String refreshToken;
 }

@@ -1,7 +1,7 @@
 package com.a2.swifting_fitness.features.auth.service;
 
-import com.a2.swifting_fitness.common.CustomException;
-import com.a2.swifting_fitness.common.StringConstants;
+import com.a2.swifting_fitness.common.exception.CustomException;
+import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.model.EmailDetails;
 import com.a2.swifting_fitness.common.service.EmailService;
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;

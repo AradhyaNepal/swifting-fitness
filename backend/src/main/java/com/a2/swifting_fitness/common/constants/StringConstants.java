@@ -1,4 +1,4 @@
-package com.a2.swifting_fitness.common;
+package com.a2.swifting_fitness.common.constants;
 
 public class StringConstants {
     public static final String noUserFromThatUsername = "No email available in our system";
@@ -12,6 +12,7 @@ public class StringConstants {
     public static final String otpRequired = "Please enter your OTP";
     public static final String passwordRegexMessage = "Password must have one upper case, one lower case, one symbol and one digit";
     public static final String passwordMinLengthMessage = "Password must be 8 character long";
+    public static final String refreshTokenRequired = "Refresh token required.";
     public static String registerSuccessfully = "Registered successfully. Please check OTP on your gmail to set your password.";
     public static String otpVerifiedSuccessfully = "OTP Verified successfully";
     public static String passwordSetSuccessfully = "Account created and password set successfully";
@@ -24,4 +25,5 @@ public class StringConstants {
     public static String invalidOTP = "Invalid OTP";
     public static String userLockedCannotContinue = "User account is locked due to suspicious requests. Please try again later.";
     public static String sendingOTPLocked = "Lots of OTP sent. Please try again later after few hours.";
+    public static String refreshTokenSuccessful = "Refresh Token Successful";
 }

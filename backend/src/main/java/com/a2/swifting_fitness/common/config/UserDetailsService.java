@@ -1,4 +1,4 @@
-package com.a2.swifting_fitness.features.auth.config;
+package com.a2.swifting_fitness.common.config;
 
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;

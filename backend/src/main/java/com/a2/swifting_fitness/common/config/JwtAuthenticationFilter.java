@@ -1,4 +1,4 @@
-package com.a2.swifting_fitness.features.auth.config;
+package com.a2.swifting_fitness.common.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
