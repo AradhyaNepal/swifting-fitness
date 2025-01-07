@@ -34,6 +34,7 @@ public class FitnessFolks implements UserDetails {
     private String fullName;
 
     @NotNull
+    @Column(unique=true)
     private String email;
 
 

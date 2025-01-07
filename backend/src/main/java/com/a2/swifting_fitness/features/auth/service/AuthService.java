@@ -27,7 +27,7 @@ public class AuthService {
     final private OTPService otpService;
     final private PasswordEncoder passwordEncoder;
     final private RefreshTokenService refreshTokenService;
-    final  private BlockUserService blockUserService;
+    final private BlockUserService blockUserService;
 
 
     public AuthenticatedResponse login(LoginRequest request) throws CustomException {
@@ -88,19 +88,26 @@ public class AuthService {
 
     }
 
-    public void register(RegisterRequest request) throws CustomException {
+    public boolean register(RegisterRequest request) throws CustomException {
         try {
-            var existingUser = userRepo.preexistingUserToRegister(request.getEmail());
+            var existingUser = userRepo.findByEmail(request.getEmail());
+            var previouslyRegistered = false;
+            FitnessFolks user = new FitnessFolks();
             if (existingUser.isPresent()) {
-                throw new CustomException(StringConstants.emailAlreadyExist);
+                user = existingUser.get();
+                if (user.isEnabled()) {
+                    throw new CustomException(StringConstants.emailAlreadyExist);
+                } else {
+                    previouslyRegistered = true;
+                }
             }
-            var user = userRepo.save(FitnessFolks.builder()
-                    .fullName(request.getFullName())
-                    .age(request.getAge())
-                    .email(request.getEmail())
-                    .gender(request.getGender())
-                    .build());
+            user.setFullName(request.getFullName());
+            user.setAge(request.getAge());
+            user.setEmail(request.getEmail());
+            user.setGender(request.getGender());
+            user = userRepo.save(user);
             otpService.generateAndSendOTP(user);
+            return previouslyRegistered;
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
@@ -192,10 +199,6 @@ public class AuthService {
             throw new CustomException(e.getMessage());
         }
     }
-
-
-
-
 
 
 }

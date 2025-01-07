@@ -21,8 +21,8 @@ public class RegisterController {
 
     @PostMapping()
     public GenericResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) throws CustomException {
-        service.register(request);
-        return GenericResponseEntity.successWithMessage(StringConstants.registerSuccessfully);
+        var previouslyRegistered = service.register(request);
+        return GenericResponseEntity.successWithMessage(previouslyRegistered ? StringConstants.reRegisterSuccessfully : StringConstants.registerSuccessfully);
     }
 
     @PostMapping(value = "/verify-otp")
