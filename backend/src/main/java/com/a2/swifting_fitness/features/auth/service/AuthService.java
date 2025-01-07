@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.features.auth.service;
 
+import com.a2.swifting_fitness.common.enums.OTPPurpose;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.config.JwtService;
@@ -106,19 +107,19 @@ public class AuthService {
             user.setEmail(request.getEmail());
             user.setGender(request.getGender());
             user = userRepo.save(user);
-            otpService.generateAndSendOTP(user);
+            otpService.generateAndSendOTP(user,OTPPurpose.register);
             return previouslyRegistered;
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
     }
 
-    public void verifyOTP(VerifyOTPRequest request) throws CustomException {
+    public void verifyOTP(VerifyOTPRequest request, OTPPurpose purpose) throws CustomException {
         try {
             var user = userRepo.findByEmail(request.getEmail());
             if (user.isPresent()) {
                 var userGet = user.get();
-                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), false);
+                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), false,purpose);
                 updateWrongAttemptAndUpdateUser(userGet, otpIsValid);
             } else {
                 throw new CustomException(StringConstants.noUserFromThatUsername);
@@ -151,13 +152,13 @@ public class AuthService {
     }
 
 
-    public void sendOTPToEmail(SendOTPToEmailRequest request) throws CustomException {
+    public void sendOTPToEmail(SendOTPToEmailRequest request,OTPPurpose purpose) throws CustomException {
         try {
 
 
             var user = userRepo.findByEmail(request.getEmail());
             if (user.isPresent()) {
-                otpService.generateAndSendOTP(user.get());
+                otpService.generateAndSendOTP(user.get(),purpose);
             } else {
                 throw new CustomException(StringConstants.noUserFromThatUsername);
             }
@@ -168,7 +169,7 @@ public class AuthService {
 
     public AuthenticatedResponse setRegisterPassword(SetPasswordRequest request) throws CustomException {
         try {
-            var user = setPassword(request);
+            var user = setPassword(request,OTPPurpose.register);
             var accessToken = jwtService.generateToken(user);
             var refreshToken = refreshTokenService.createRefreshToken(user).getToken();
             return AuthenticatedResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
@@ -177,12 +178,12 @@ public class AuthService {
         }
     }
 
-    public FitnessFolks setPassword(SetPasswordRequest request) throws CustomException {
+    public FitnessFolks setPassword(SetPasswordRequest request,OTPPurpose purpose) throws CustomException {
         try {
             var user = userRepo.findByEmail(request.getEmail());
             if (user.isPresent()) {
                 var userGet = user.get();
-                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), true);
+                var otpIsValid = otpService.otpIsCorrect(userGet, request.getOtp(), true,purpose);
                 if (otpIsValid) {
                     userGet.setPassword(passwordEncoder.encode(request.getPassword()));
                     updateWrongAttemptAndUpdateUser(userGet, true);

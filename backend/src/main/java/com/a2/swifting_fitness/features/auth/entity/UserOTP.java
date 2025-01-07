@@ -1,5 +1,7 @@
 package com.a2.swifting_fitness.features.auth.entity;
 
+import com.a2.swifting_fitness.common.enums.Gender;
+import com.a2.swifting_fitness.common.enums.OTPPurpose;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,10 @@ public class UserOTP {
 
     @NotNull
     private  String otpEncoded;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private OTPPurpose purpose;
 
     @NotNull
     private Instant expiry;

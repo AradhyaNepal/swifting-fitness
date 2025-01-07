@@ -36,6 +36,9 @@ public class RefreshTokenService {
 
 
     public RefreshToken verifyThenDeleteOrCreateNew(String token, FitnessFolks user) throws CustomException {
+        if (!user.isAccountNonLocked()) {
+            throw new CustomException(StringConstants.userLockedCannotContinue);
+        }
         var refreshToken = refreshTokenRepository.findByToken(token);
         var now = Instant.now();
         if (refreshToken.isPresent()) {

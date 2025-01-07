@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.features.auth.service;
 
+import com.a2.swifting_fitness.common.enums.OTPPurpose;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.model.EmailDetails;
@@ -10,6 +11,7 @@ import com.a2.swifting_fitness.features.auth.repository.UserOTPRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -22,15 +24,16 @@ public class OTPService {
     final private UserOTPRepository otpRepository;
     final private PasswordEncoder passwordEncoder;
 
-    public void generateAndSendOTP(FitnessFolks user) throws CustomException {
+    public void generateAndSendOTP(FitnessFolks user, OTPPurpose purpose) throws CustomException {
         if (!user.isAccountNonLocked()) {
             throw new CustomException(StringConstants.userLockedCannotContinue);
         }
         StringBuilder otp = getSecureOTP();
         var now = Instant.now();
-        var oldOTP = checkAndExpireOldUser(user, now);
+        var oldOTP = checkAndExpireOldUser(user, now,purpose);
         otpRepository.saveAll(oldOTP);
         otpRepository.save(UserOTP.builder()
+                .purpose(purpose)
                 .user(user)
                 .expiry(now.plus(30, ChronoUnit.MINUTES))
                 .otpEncoded(passwordEncoder.encode(otp.toString()))
@@ -44,8 +47,8 @@ public class OTPService {
 
     }
 
-    private List<UserOTP> checkAndExpireOldUser(FitnessFolks user, Instant now) throws CustomException {
-        var oldOTP = otpRepository.findByUserId(user.getId())
+    private List<UserOTP> checkAndExpireOldUser(FitnessFolks user, Instant now,OTPPurpose purpose) throws CustomException {
+        var oldOTP = otpRepository.findByUserIdAndPurpose(user.getId(),purpose)
                 .stream().filter(e -> e.getExpiry().isAfter(now.plus(60, ChronoUnit.MINUTES))).toList();
         if (oldOTP.size() > 5) {
             throw new CustomException(StringConstants.sendingOTPLocked);
@@ -65,9 +68,9 @@ public class OTPService {
         return otp;
     }
 
-    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid) {
+    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid,OTPPurpose purpose) {
         Instant now = Instant.now();
-        var notExpiredOtp = otpRepository.findByUserId(fitnessFolks.getId())
+        var notExpiredOtp = otpRepository.findByUserIdAndPurpose(fitnessFolks.getId(),purpose)
                 .stream()
                 .filter(
                         e -> e.getExpiry().isAfter(now) && passwordEncoder.matches(enteredOTP, e.getOtpEncoded())

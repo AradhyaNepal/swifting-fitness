@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.features.auth.controller;
 
+import com.a2.swifting_fitness.common.enums.OTPPurpose;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
@@ -27,13 +28,13 @@ public class RegisterController {
 
     @PostMapping(value = "/verify-otp")
     public GenericResponseEntity<Void> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) throws CustomException {
-        service.verifyOTP(request);
+        service.verifyOTP(request, OTPPurpose.register);
         return GenericResponseEntity.successWithMessage(StringConstants.otpVerifiedSuccessfully);
     }
 
     @PostMapping(value = "/resend-otp")
     public GenericResponseEntity<Void> resendOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
-        service.sendOTPToEmail(request);
+        service.sendOTPToEmail(request,OTPPurpose.register);
         return GenericResponseEntity.successWithMessage(StringConstants.emailSentSuccessfully);
     }
 
