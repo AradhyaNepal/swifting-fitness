@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -30,11 +31,12 @@ public class OTPService {
         }
         StringBuilder otp = getSecureOTP();
         var now = Instant.now();
-        var oldOTP = checkAndExpireOldUser(user, now,purpose);
+        var oldOTP = checkNewOTPLimitAndExpireOldOTP(user, now, purpose);
         otpRepository.saveAll(oldOTP);
         otpRepository.save(UserOTP.builder()
                 .purpose(purpose)
                 .user(user)
+                .createdAt(now)
                 .expiry(now.plus(30, ChronoUnit.MINUTES))
                 .otpEncoded(passwordEncoder.encode(otp.toString()))
                 .build());
@@ -47,17 +49,30 @@ public class OTPService {
 
     }
 
-    //Todo: 1
-    private List<UserOTP> checkAndExpireOldUser(FitnessFolks user, Instant now,OTPPurpose purpose) throws CustomException {
-        var oldOTP = otpRepository.findByUserIdAndPurpose(user.getId(),purpose)
-                .stream().filter(e -> e.getExpiry().isAfter(now.plus(60, ChronoUnit.MINUTES))).toList();
-        if (oldOTP.size() > 5) {
-            throw new CustomException(StringConstants.sendingOTPLocked);
-        }
-        for (var e : oldOTP) {
+
+    private List<UserOTP> checkNewOTPLimitAndExpireOldOTP(FitnessFolks user, Instant now, OTPPurpose purpose) throws CustomException {
+        var sortedOTP = otpRepository.sortedOTP(user.getId(), purpose);
+
+        mayThrowLotsOfOTPOnSpecificHour(sortedOTP, now);
+        for (var e : sortedOTP) {
+
             e.setExpiry(now);
         }
-        return oldOTP;
+        return sortedOTP;
+    }
+
+    private void mayThrowLotsOfOTPOnSpecificHour(List<UserOTP> sortedOTP, Instant now) throws CustomException {
+        var latestOTP = sortedOTP
+                .stream().filter(e -> e.getCreatedAt().isAfter(now.minus(12, ChronoUnit.HOURS))).toList();
+
+        if (latestOTP.size() > 9) {
+            throw new CustomException(StringConstants.sendingOTPLocked);
+        }
+        for (var e : latestOTP) {
+            if (e.getCreatedAt().plus(1, ChronoUnit.MINUTES).isAfter(now)) {
+                throw new CustomException(StringConstants.newOTPCanOnlyBeSentAfter);
+            }
+        }
     }
 
     private StringBuilder getSecureOTP() {
@@ -69,13 +84,13 @@ public class OTPService {
         return otp;
     }
 
-    //Todo: Two
-    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid,OTPPurpose purpose) throws CustomException {
+
+    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid, OTPPurpose purpose) throws CustomException {
         if (!fitnessFolks.isAccountNonLocked()) {
             throw new CustomException(StringConstants.userLockedCannotContinue);
         }
         Instant now = Instant.now();
-        var notExpiredOtp = otpRepository.findByUserIdAndPurpose(fitnessFolks.getId(),purpose)
+        var notExpiredOtp = otpRepository.sortedOTP(fitnessFolks.getId(), purpose)
                 .stream()
                 .filter(
                         e -> e.getExpiry().isAfter(now) && passwordEncoder.matches(enteredOTP, e.getOtpEncoded())
@@ -84,6 +99,7 @@ public class OTPService {
         var isValid = !notExpiredOtp.isEmpty();
         if (isValid && expireIfValid) {
             notExpiredOtp.forEach(e -> e.setExpiry(now));
+            otpRepository.saveAll(notExpiredOtp);
         }
         return isValid;
     }

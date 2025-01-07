@@ -32,6 +32,9 @@ public class UserOTP {
     @NotNull
     private Instant expiry;
 
+    @NotNull
+    private Instant createdAt;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private FitnessFolks user;
