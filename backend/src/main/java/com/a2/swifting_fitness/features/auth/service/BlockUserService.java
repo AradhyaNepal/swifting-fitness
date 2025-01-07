@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 public class BlockUserService {
     public void setBlockUser(FitnessFolks user) {
         var wrongAttempts = user.getWrongAttempts() + 1;
-        if (wrongAttempts >= 10) {
+        if (wrongAttempts >= 9) {
             user.setWrongAttempts(0);
             user.setIsBlockedTill(Instant.now().plus(12, ChronoUnit.HOURS));
         } else {
