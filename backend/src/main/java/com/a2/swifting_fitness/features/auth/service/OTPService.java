@@ -9,6 +9,7 @@ import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.entity.UserOTP;
 import com.a2.swifting_fitness.features.auth.repository.UserOTPRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -102,5 +103,12 @@ public class OTPService {
             otpRepository.saveAll(notExpiredOtp);
         }
         return isValid;
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(fixedDelay = 10000)
+    public void deleteExpiredOTP() {
+        System.out.println("Deleting OTP Scheduler called");
+        otpRepository.deleteAll(otpRepository.findAll().stream().filter(e -> e.getExpiry().plus(1, ChronoUnit.DAYS).isBefore(Instant.now())).toList());
     }
 }

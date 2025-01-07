@@ -12,4 +12,5 @@ import java.util.List;
 public interface UserOTPRepository extends JpaRepository<UserOTP, Integer> {
     @Query("SELECT p FROM UserOTP p WHERE p.user.id = :userId AND p.purpose = :purpose ORDER BY p.expiry DESC")
     List<UserOTP> sortedOTP(@Param("userId") int userId, @Param("purpose")OTPPurpose purpose);
+
 }
