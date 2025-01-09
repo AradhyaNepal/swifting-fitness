@@ -15,6 +15,7 @@ public class StringConstants {
     public static final String refreshTokenRequired = "Refresh token required.";
     public static final String registerSuccessfully = "Registered successfully. Please check OTP on your gmail to set your password.";
     public static final String reRegisterSuccessfully = "Re-Registered successfully. Check email for OTP, and this time please complete all registration steps.";
+    public static final String reRegisterSuccessfullyReuseOTP = "Re-Registered successfully. Please reuse same OTP previously sent.";
     public static final String otpVerifiedSuccessfully = "OTP Verified successfully";
     public static final String passwordSetSuccessfully = "Account created and password set successfully";
     public static final String loggedInSuccessfully = "Logged in successfully";

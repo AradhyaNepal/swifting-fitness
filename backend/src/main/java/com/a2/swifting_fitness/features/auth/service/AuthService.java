@@ -4,6 +4,7 @@ import com.a2.swifting_fitness.common.enums.OTPPurpose;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.config.JwtService;
+import com.a2.swifting_fitness.common.exception.OTPResendLimitException;
 import com.a2.swifting_fitness.features.auth.dto.*;
 import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
@@ -89,17 +90,17 @@ public class AuthService {
 
     }
 
-    public boolean register(RegisterRequest request) throws CustomException {
+    public String register(RegisterRequest request) throws CustomException {
         try {
             var existingUser = userRepo.findByEmail(request.getEmail());
-            var previouslyRegistered = false;
+            String message = StringConstants.registerSuccessfully;
             FitnessFolks user = new FitnessFolks();
             if (existingUser.isPresent()) {
                 user = existingUser.get();
                 if (user.isEnabled()) {
                     throw new CustomException(StringConstants.emailAlreadyExist);
                 } else {
-                    previouslyRegistered = true;
+                    message = StringConstants.reRegisterSuccessfully;
                 }
             }
             user.setFullName(request.getFullName());
@@ -108,8 +109,10 @@ public class AuthService {
             user.setGender(request.getGender());
             user = userRepo.save(user);
             otpService.generateAndSendOTP(user, OTPPurpose.register);
-            return previouslyRegistered;
-        } catch (Exception e) {
+            return message;
+        } catch (OTPResendLimitException e){
+            return  StringConstants.reRegisterSuccessfullyReuseOTP;
+        }catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
     }
