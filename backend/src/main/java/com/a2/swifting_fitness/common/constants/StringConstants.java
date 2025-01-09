@@ -28,6 +28,7 @@ public class StringConstants {
     public static final String userLockedCannotContinue = "User account is locked due to suspicious requests. Please try again later.";
     public static final String sendingOTPLocked = "Lots of OTP sent. Please try again later after few hours.";
     public static final String newOTPCanOnlyBeSentAfter = "New OTP can only be sent after 1 minutes";
+    public static final String userDetailsFetchedSuccessfully = "User details fetched successfully.";
     public static final String refreshTokenSuccessful = "Refresh Token Successful";
     public static final String userNotFound = "User not found...";
     public static final String invalidToken = "Invalid JWT Token. How the heck this was allowed in our system.";

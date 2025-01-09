@@ -6,6 +6,7 @@ import com.a2.swifting_fitness.common.utils.UserFromSecurityContext;
 import com.a2.swifting_fitness.common.config.JwtService;
 import com.a2.swifting_fitness.features.auth.dto.RefreshTokenRequest;
 import com.a2.swifting_fitness.features.auth.dto.RefreshTokenResponse;
+import com.a2.swifting_fitness.features.auth.dto.UserDetails;
 import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,11 @@ public class UserService {
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .build();
+    }
+
+    public UserDetails getUserDetails() throws CustomException {
+        var user= UserFromSecurityContext.get();
+        return  UserDetails.fromFitnessFolks(user);
+
     }
 }
