@@ -1,7 +1,7 @@
 package com.a2.swifting_fitness.common.config;
 
 import com.a2.swifting_fitness.common.enums.UserRole;
-import com.a2.swifting_fitness.features.auth.model.JWTExtracted;
+import com.a2.swifting_fitness.common.model.JWTExtracted;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
