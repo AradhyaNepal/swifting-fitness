@@ -86,9 +86,8 @@ public class AuthService {
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
-
-
     }
+
 
     public String register(RegisterRequest request) throws CustomException {
         try {
@@ -127,8 +126,8 @@ public class AuthService {
                     blockUserService.removeUserAllBlockageAndSave(userGet,userRepo);
                 }else{
                     blockUserService.setBlockUser(userGet);
+                    userRepo.save(userGet);
                     throw new CustomException(StringConstants.invalidOTP);
-
                 }
 
             } else {
@@ -144,8 +143,6 @@ public class AuthService {
 
     public void sendOTPToEmail(SendOTPToEmailRequest request, OTPPurpose purpose) throws CustomException {
         try {
-
-
             var user = userRepo.findByEmail(request.getEmail());
             if (user.isPresent()) {
                 otpService.generateAndSendOTP(user.get(), purpose);

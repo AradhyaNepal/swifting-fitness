@@ -24,6 +24,11 @@ public class EmailService {
     private String sender;
 
     public String sendSimpleMail(EmailDetails details) {
+
+        if (true) {
+            System.out.println(details.getMsgBody());
+            return "Bello";
+        }
         // Try block to check for exceptions
         try {
 

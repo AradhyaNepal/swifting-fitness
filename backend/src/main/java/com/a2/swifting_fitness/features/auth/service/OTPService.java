@@ -57,7 +57,6 @@ public class OTPService {
 
         mayThrowLotsOfOTPOnSpecificHour(sortedOTP, now);
         for (var e : sortedOTP) {
-
             e.setExpiry(now);
         }
         return sortedOTP;
@@ -106,10 +105,12 @@ public class OTPService {
         return isValid;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")//12 AM
 //    @Scheduled(fixedDelay = 10000)
     public void deleteExpiredOTP() {
         System.out.println("Deleting OTP Scheduler called");
         otpRepository.deleteAll(otpRepository.findAll().stream().filter(e -> e.getExpiry().plus(1, ChronoUnit.DAYS).isBefore(Instant.now())).toList());
     }
+
+
 }

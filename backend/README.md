@@ -5,3 +5,6 @@
 //You can make resend OTP and forgot password as same api
 // If access token expired no response being sent to the user
 // If access token is expired, 
+// On wrong enum my backend dont send proper response
+// Is BCryptPasswordEncoder reversable
+//UserDetailsService two times being done

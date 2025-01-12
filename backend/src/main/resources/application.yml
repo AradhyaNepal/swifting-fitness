@@ -29,6 +29,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
+#    Use ENV
     username: ${swifting-fitness-email}
     password: ${swifting-fitness-password}
     properties:

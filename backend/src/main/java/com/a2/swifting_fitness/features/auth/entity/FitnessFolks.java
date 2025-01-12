@@ -23,7 +23,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "FitnessFolks")
+@Table(name = "fitness_folks")
 public class FitnessFolks implements UserDetails {
 
     @Id
@@ -34,7 +34,7 @@ public class FitnessFolks implements UserDetails {
     private String fullName;
 
     @NotNull
-    @Column(unique=true)
+    @Column(unique = true)
     private String email;
 
 
@@ -67,6 +67,7 @@ public class FitnessFolks implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        //Todo: Bad code, fix it.
         if (role == null) {
             return List.of(new SimpleGrantedAuthority("ROLE_" + UserRole.user));
         }

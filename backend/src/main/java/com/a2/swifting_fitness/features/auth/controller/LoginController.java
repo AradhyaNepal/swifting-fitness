@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LoginController {
     final private AuthService service;
-    final private UserService userService;
 
-    @PostMapping()
+    @PostMapping(value = "login")
     public GenericResponseEntity<AuthenticatedResponse> login(@RequestBody @Valid LoginRequest request) throws CustomException {
         return GenericResponseEntity.successWithData(service.login(request),
                 StringConstants.loggedInSuccessfully);

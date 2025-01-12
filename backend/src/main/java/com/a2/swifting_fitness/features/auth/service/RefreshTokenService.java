@@ -8,10 +8,12 @@ import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
 import com.a2.swifting_fitness.features.auth.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
@@ -44,12 +46,14 @@ public class RefreshTokenService {
         if (refreshToken.isPresent()) {
             var tokenGet = refreshToken.get();
             if (tokenGet.getExpiryDate().isBefore(now)) {
+                blockUserService.setBlockUser(user);
+                userRepository.save(user);
                 refreshTokenRepository.delete(tokenGet);
                 throw new CustomException(StringConstants.refreshTokenExpired, HttpStatus.FORBIDDEN);
             }
-            tokenGet.setExpiryDate(now);
+            tokenGet.setExpiryDate(now); //R1 gets expired
             refreshTokenRepository.save(tokenGet);
-            return createRefreshToken(user);
+            return createRefreshToken(user); //Generate new R2
 
         } else {
             blockUserService.setBlockUser(user);
@@ -57,6 +61,14 @@ public class RefreshTokenService {
             throw new CustomException(StringConstants.invalidRefreshToken, HttpStatus.FORBIDDEN);
         }
 
+    }
+
+
+    @Scheduled(cron = "0 0 0 * * ?")//12 AM
+//    @Scheduled(fixedDelay = 10000)
+    public void deleteExpiredRefreshToken() {
+        System.out.println("Deleting Expired Refreshed Token Scheduler called");
+        refreshTokenRepository.deleteAll(refreshTokenRepository.findAll().stream().filter(e -> e.getExpiryDate().plus(7, ChronoUnit.DAYS).isBefore(Instant.now())).toList());
     }
 
 

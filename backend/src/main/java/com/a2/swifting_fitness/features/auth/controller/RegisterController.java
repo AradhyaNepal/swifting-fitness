@@ -39,7 +39,6 @@ public class RegisterController {
 
     @PostMapping(value = "/set-password")
     public GenericResponseEntity<AuthenticatedResponse> setPassword(@RequestBody @Valid SetPasswordRequest request) throws CustomException {
-
         return GenericResponseEntity.successWithData(service.setRegisterPassword(request), StringConstants.passwordSetSuccessfully);
     }
 

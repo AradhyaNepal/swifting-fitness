@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.List;
 
 @ControllerAdvice
-public class ValidationExceptionHandler {
+public class CustomerExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public GenericResponseEntity<Void> validationInvalid(MethodArgumentNotValidException ex, HttpServletRequest request) {
