@@ -1,0 +1,40 @@
+#server:
+#  ip: 192.168.11.38
+#  port: 8080
+spring:
+  application:
+    name: swifting-fitness
+  #  resources:
+  #    static-locations:
+  #      - classpath:/static/
+  #      - file:./uploads/
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/swifting_fitness_ios
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+    platform: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: POSTGRESQL
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${swifting-fitness-email}
+    password: ${swifting-fitness-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
