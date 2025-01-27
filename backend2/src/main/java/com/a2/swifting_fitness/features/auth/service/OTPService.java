@@ -87,7 +87,7 @@ public class OTPService {
     }
 
 
-    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, boolean expireIfValid, OTPPurpose purpose) throws CustomException {
+    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, OTPPurpose purpose) throws CustomException {
         if (!fitnessFolks.isAccountNonLocked()) {
             throw new CustomException(StringConstants.userLockedCannotContinue);
         }
@@ -99,7 +99,7 @@ public class OTPService {
                 ).toList();
 
         var isValid = !notExpiredOtp.isEmpty();
-        if (isValid && expireIfValid) {
+        if (isValid) {
             notExpiredOtp.forEach(e -> e.setExpiry(now));
             otpRepository.saveAll(notExpiredOtp);
         }

@@ -6,6 +6,7 @@ import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
 import com.a2.swifting_fitness.features.auth.dto.SendOTPToEmailRequest;
 import com.a2.swifting_fitness.features.auth.dto.SetPasswordRequest;
+import com.a2.swifting_fitness.features.auth.dto.VerifyOTPAndSetPasswordRequest;
 import com.a2.swifting_fitness.features.auth.dto.VerifyOTPRequest;
 import com.a2.swifting_fitness.features.auth.service.AuthService;
 import jakarta.validation.Valid;
@@ -21,27 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class ForgotPasswordController {
     final private AuthService service;
 
-    @PostMapping()
-    public GenericResponseEntity<Void> forgotPassword(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
-        service.sendOTPToEmail(request, OTPPurpose.forgotPassword);
-        return GenericResponseEntity.successWithMessage(StringConstants.emailSentSuccessfully);
-    }
 
-    @PostMapping(value = "resend-otp")
+    @PostMapping(value = "send-otp-to-email")
     public GenericResponseEntity<Void> resendOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
         service.sendOTPToEmail(request, OTPPurpose.forgotPassword);
         return GenericResponseEntity.successWithMessage(StringConstants.emailSentSuccessfully);
     }
 
-    @PostMapping(value = "verify-otp")
-    public GenericResponseEntity<Void> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) throws CustomException {
-        service.verifyOTP(request, OTPPurpose.forgotPassword);
-        return GenericResponseEntity.successWithMessage(StringConstants.otpVerifiedSuccessfully);
-    }
-
-    @PostMapping(value = "set-password")
-    public GenericResponseEntity<Void> setPassword(@RequestBody @Valid SetPasswordRequest request) throws CustomException {
-        service.setPassword(request, OTPPurpose.forgotPassword);
+    @PostMapping(value = "verify-and-set-password")
+    public GenericResponseEntity<Void> verifyAndSetPassword(@RequestBody @Valid VerifyOTPAndSetPasswordRequest request) throws CustomException {
+        service.forgotPasswordVerifyAndSetPassword(request);
         return GenericResponseEntity.successWithMessage(StringConstants.passwordChangedSuccessfullyPleaseLogin);
     }
 

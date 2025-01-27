@@ -22,18 +22,18 @@ public class RegisterController {
 
     @PostMapping()
     public GenericResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) throws CustomException {
-        return  GenericResponseEntity.successWithMessage(service.register(request));
+
+        return GenericResponseEntity.successWithMessage(service.register(request));
     }
 
     @PostMapping(value = "/verify-otp")
     public GenericResponseEntity<AuthenticatedResponse> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) throws CustomException {
-        service.verifyOTP(request, OTPPurpose.register);
-        return GenericResponseEntity.successWithMessage(StringConstants.otpVerifiedSuccessfully);
+        return GenericResponseEntity.successWithData(service.registerVerifyOTP(request), StringConstants.otpVerifiedSuccessfully);
     }
 
     @PostMapping(value = "/resend-otp")
     public GenericResponseEntity<Void> resendOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
-        service.sendOTPToEmail(request,OTPPurpose.register);
+        service.sendOTPToEmail(request, OTPPurpose.register);
         return GenericResponseEntity.successWithMessage(StringConstants.emailSentSuccessfully);
     }
 

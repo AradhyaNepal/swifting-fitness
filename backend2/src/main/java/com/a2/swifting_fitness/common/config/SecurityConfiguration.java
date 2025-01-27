@@ -32,7 +32,7 @@ public class SecurityConfiguration {
                                         "/swagger-ui/**",
                                         "/swagger-ui.html",
                                         "/api/v1/auth/**",
-                                        "/api/v1/refresh/**",
+                                        "/api/v1/refresh",
                                         "/assets/**").permitAll()
                                 .anyRequest().hasRole(UserRole.user.toRoleString())
                 )

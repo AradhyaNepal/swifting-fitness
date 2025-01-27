@@ -27,6 +27,10 @@ public class EmailService {
         // Try block to check for exceptions
         try {
 
+            if(true){
+                System.out.println("OTP is "+ details.getMsgBody());
+                return  "Hi";
+            }
             // Creating a simple mail message
             SimpleMailMessage mailMessage
                     = new SimpleMailMessage();

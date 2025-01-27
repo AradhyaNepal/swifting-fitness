@@ -13,4 +13,7 @@ import lombok.NoArgsConstructor;
 public class RefreshTokenRequest {
     @NotEmpty(message = StringConstants.refreshTokenRequired)
     private String refreshToken;
+
+    @NotEmpty(message = StringConstants.refreshTokenRequired)
+    private String accessToken;
 }

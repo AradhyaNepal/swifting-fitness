@@ -27,4 +27,9 @@ public class UserController {
         return GenericResponseEntity.successWithData(userService.getUserDetails(), StringConstants.userDetailsFetchedSuccessfully);
     }
 
+    @PostMapping(value = "logout")
+    public GenericResponseEntity<Void> logout() throws CustomException {
+        return GenericResponseEntity.successWithMessage( StringConstants.successfullyLoggedOut);
+    }
+
 }

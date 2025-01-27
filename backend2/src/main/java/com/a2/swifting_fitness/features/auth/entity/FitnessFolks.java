@@ -1,6 +1,5 @@
 package com.a2.swifting_fitness.features.auth.entity;
 
-import com.a2.swifting_fitness.common.enums.Gender;
 import com.a2.swifting_fitness.common.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +12,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -39,17 +37,13 @@ public class FitnessFolks implements UserDetails {
 
 
     private String profile;
-    @NotNull
-    private int age;
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+
 
     private int wrongAttempts;
     private Instant isBlockedTill;
 
     @NotNull
-    private boolean accountVerified;
+    private Boolean accountVerified;
 
 
     public @NotNull String getUsername() {

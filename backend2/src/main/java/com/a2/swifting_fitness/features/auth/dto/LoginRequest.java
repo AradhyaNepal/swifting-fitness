@@ -18,6 +18,7 @@ public class LoginRequest {
     @NotEmpty(message = StringConstants.passwordRequired)
     private String password;
 
+    private String fcmToken;
 
 
 }

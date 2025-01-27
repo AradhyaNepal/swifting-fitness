@@ -1,6 +1,5 @@
 package com.a2.swifting_fitness.features.auth.entity;
 
-import com.a2.swifting_fitness.common.enums.Gender;
 import com.a2.swifting_fitness.common.enums.OTPPurpose;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
