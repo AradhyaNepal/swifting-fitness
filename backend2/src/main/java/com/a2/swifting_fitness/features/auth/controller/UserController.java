@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/v1/user")
 @RestController
 @RequiredArgsConstructor
-@SecurityRequirement(name = "Authorization123")
+@SecurityRequirement(name = "Authorization")
 public class UserController {
 
     final  private UserService userService;
@@ -25,6 +25,11 @@ public class UserController {
     @GetMapping()
     public GenericResponseEntity<UserDetailsResponse> getUserDetails() throws CustomException {
         return GenericResponseEntity.successWithData(userService.getUserDetails(), StringConstants.userDetailsFetchedSuccessfully);
+    }
+
+    @PostMapping(value = "logout")
+    public GenericResponseEntity<Void> logout() throws CustomException {
+        return GenericResponseEntity.successWithMessage( StringConstants.successfullyLoggedOut);
     }
 
 }
