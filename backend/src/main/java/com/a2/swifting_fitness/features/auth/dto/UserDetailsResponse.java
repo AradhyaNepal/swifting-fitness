@@ -9,15 +9,15 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class UserDetails {
+public class UserDetailsResponse {
     private String uid;
     private String email;
     private int age;
     private Gender gender;
     private String profile;
 
-    static  public UserDetails fromFitnessFolks(FitnessFolks fitnessFolks){
-        return  UserDetails.builder()
+    static  public UserDetailsResponse fromFitnessFolks(FitnessFolks fitnessFolks){
+        return  UserDetailsResponse.builder()
                 .uid(fitnessFolks.getUid())
                 .email(fitnessFolks.getEmail())
                 .age(fitnessFolks.getAge())

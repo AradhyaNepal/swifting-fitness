@@ -8,7 +8,7 @@ import java.util.Map;
 @Getter
 public class CustomException extends  Exception{
     private final HttpStatus status;
-    private final Map extraFlags;
+        private final Map extraFlags;
 
     public CustomException(String message) {
         super(message);
