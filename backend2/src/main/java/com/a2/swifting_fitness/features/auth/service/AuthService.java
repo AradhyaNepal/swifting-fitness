@@ -153,6 +153,28 @@ public class AuthService {
         }
     }
 
+    public AuthenticatedResponse adminVerifySetDeviceID(AdminNewDeviceVerifyRequest request) throws CustomException {
+        try {
+            var user = verifyOTP(
+                    request.getEmail(),
+                    request.getOtp(),
+                    OTPPurpose.ADMIN_DEVICE_ID
+            );
+            user.setAccountVerified(true);
+            user.setDeviceId(request.getDeviceId());
+            userRepo.save(user);
+            var refreshToken = refreshTokenService.createRefreshToken(user).getToken();
+            var accessToken = jwtService.generateToken(user);
+            return AuthenticatedResponse.builder()
+                    .refreshToken(refreshToken)
+                    .accessToken(accessToken)
+                    .build();
+
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
+        }
+    }
+
 
     public void forgotPasswordVerifyAndSetPassword(VerifyOTPAndSetPasswordRequest request) throws CustomException {
         try {

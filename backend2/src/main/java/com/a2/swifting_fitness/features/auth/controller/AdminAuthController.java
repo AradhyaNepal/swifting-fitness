@@ -5,6 +5,7 @@ import com.a2.swifting_fitness.common.enums.OTPPurpose;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
 import com.a2.swifting_fitness.features.auth.dto.AdminLoginRequest;
+import com.a2.swifting_fitness.features.auth.dto.AdminNewDeviceVerifyRequest;
 import com.a2.swifting_fitness.features.auth.dto.AuthenticatedResponse;
 import com.a2.swifting_fitness.features.auth.dto.SendOTPToEmailRequest;
 import com.a2.swifting_fitness.features.auth.service.AuthService;
@@ -34,9 +35,9 @@ public class AdminAuthController {
     }
 
     @PostMapping(value = "verify-new-device-otp")
-    public GenericResponseEntity<Void> verifyNewDeviceOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
-        service.registerVerifyOTP(request, OTPPurpose.ADMIN_DEVICE_ID);
-        return GenericResponseEntity.successWithMessage(StringConstants.emailSentSuccessfully);
+    public GenericResponseEntity<Void> verifyNewDeviceOTP(@RequestBody @Valid AdminNewDeviceVerifyRequest request) throws CustomException {
+        service.adminVerifySetDeviceID(request);
+        return GenericResponseEntity.successWithMessage(StringConstants.newDeviceSet);
     }
 
 

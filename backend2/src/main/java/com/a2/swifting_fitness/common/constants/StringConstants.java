@@ -39,5 +39,6 @@ public class StringConstants {
     public static final String refreshTokenExpired = "Refresh token is expired. Please make a new login..!";
     public static final String invalidRefreshToken = "Invalid refresh token";
     public static final String deviceIdRequired = "Device Id is required";
+    public static final String newDeviceSet = "New device has been set for your account";
     public static String alreadyAccountVerified = "Account already verified. PLease login to continue using";
 }
