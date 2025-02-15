@@ -21,8 +21,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "FitnessFolks")
-public class FitnessFolks implements UserDetails {
+@Table(name = "Users")
+public class Users implements UserDetails {
 
     @Id
     @GeneratedValue
@@ -37,6 +37,8 @@ public class FitnessFolks implements UserDetails {
 
 
     private String profile;
+
+
 
 
     private int wrongAttempts;
@@ -56,6 +58,8 @@ public class FitnessFolks implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    private  String deviceId;
 
 
     @Column(unique = true, nullable = false, updatable = false)

@@ -1,8 +1,8 @@
 package com.a2.swifting_fitness.common.config;
 
 import com.a2.swifting_fitness.common.constants.StringConstants;
-import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
-import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
+import com.a2.swifting_fitness.features.auth.entity.Users;
+import com.a2.swifting_fitness.features.auth.repository.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
-    final private FitnessFolksRepository userRepository;
+    final private UsersRepository userRepository;
 
     @Override
-    public FitnessFolks loadUserByUsername(String uid) throws UsernameNotFoundException {
+    public Users loadUserByUsername(String uid) throws UsernameNotFoundException {
         var user = userRepository.findByUId(uid);
 
         if (user.isPresent()) {

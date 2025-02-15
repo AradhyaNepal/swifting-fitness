@@ -5,9 +5,7 @@ import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
 import com.a2.swifting_fitness.features.auth.dto.SendOTPToEmailRequest;
-import com.a2.swifting_fitness.features.auth.dto.SetPasswordRequest;
 import com.a2.swifting_fitness.features.auth.dto.VerifyOTPAndSetPasswordRequest;
-import com.a2.swifting_fitness.features.auth.dto.VerifyOTPRequest;
 import com.a2.swifting_fitness.features.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +23,7 @@ public class ForgotPasswordController {
 
     @PostMapping(value = "send-otp-to-email")
     public GenericResponseEntity<Void> resendOTP(@RequestBody @Valid SendOTPToEmailRequest request) throws CustomException {
-        service.sendOTPToEmail(request, OTPPurpose.forgotPassword);
+        service.sendOTPToEmail(request, OTPPurpose.FORGOT_PASSWORD);
         return GenericResponseEntity.successWithMessage(StringConstants.emailSentSuccessfully);
     }
 

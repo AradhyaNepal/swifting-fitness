@@ -6,8 +6,8 @@ import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.config.JwtService;
 import com.a2.swifting_fitness.common.exception.OTPResendLimitException;
 import com.a2.swifting_fitness.features.auth.dto.*;
-import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
-import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
+import com.a2.swifting_fitness.features.auth.entity.Users;
+import com.a2.swifting_fitness.features.auth.repository.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
@@ -22,7 +22,7 @@ import java.util.Map;
 @Service
 @AllArgsConstructor
 public class AuthService {
-    final private FitnessFolksRepository userRepo;
+    final private UsersRepository userRepo;
     final private AuthenticationManager authManager;
     final private JwtService jwtService;
     final private OTPService otpService;
@@ -39,6 +39,7 @@ public class AuthService {
                 if (authentication.isAuthenticated()) {
                     if (user.isPresent()) {
                         var userGet = user.get();
+                        checkForAdmin(request,userGet);
                         blockUserService.removeUserAllBlockageAndSave(userGet, userRepo);
                         var accessToken = jwtService.generateToken(userGet);
                         var refreshToken = refreshTokenService.createRefreshToken(userGet).getToken();
@@ -90,11 +91,21 @@ public class AuthService {
 
     }
 
+    private void checkForAdmin(LoginRequest loginRequest,Users users) throws CustomException {
+        if(loginRequest instanceof AdminLoginRequest loginCasted){
+            if(users.getDeviceId()==null || loginCasted.getDeviceId().equals(users.getDeviceId())){
+                var map=new HashMap<String,Object>();
+                map.put("deviceIDNotSet",true);
+                throw  new CustomException("Please setup device id to continue",HttpStatus.FORBIDDEN,map);
+            }
+        }
+    }
+
     public String register(RegisterRequest request) throws CustomException {
         try {
             var existingUser = userRepo.findByEmail(request.getEmail());
             String message = StringConstants.registerSuccessfully;
-            FitnessFolks user = new FitnessFolks();
+            Users user = new Users();
             if (existingUser.isPresent()) {
                 user = existingUser.get();
                 if (user.isEnabled()) {
@@ -108,7 +119,7 @@ public class AuthService {
             user.setAccountVerified(false);
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             user = userRepo.save(user);
-            otpService.generateAndSendOTP(user, OTPPurpose.register);
+            otpService.generateAndSendOTP(user, OTPPurpose.REGISTER);
             return message;
         } catch (OTPResendLimitException e) {
             return StringConstants.reRegisterSuccessfullyReuseOTP;
@@ -123,7 +134,7 @@ public class AuthService {
             var user = verifyOTP(
                     request.getEmail(),
                     request.getOtp(),
-                    OTPPurpose.register
+                    OTPPurpose.REGISTER
             );
             if (user.getAccountVerified()) {
                 throw new CustomException(StringConstants.alreadyAccountVerified);
@@ -145,7 +156,7 @@ public class AuthService {
 
     public void forgotPasswordVerifyAndSetPassword(VerifyOTPAndSetPasswordRequest request) throws CustomException {
         try {
-            var user = verifyOTP(request.getEmail(), request.getOtp(), OTPPurpose.forgotPassword);
+            var user = verifyOTP(request.getEmail(), request.getOtp(), OTPPurpose.FORGOT_PASSWORD);
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             userRepo.save(user);
         } catch (Exception e) {
@@ -154,7 +165,7 @@ public class AuthService {
 
     }
 
-    private FitnessFolks verifyOTP(String email, String otp, OTPPurpose purpose) throws CustomException {
+    private Users verifyOTP(String email, String otp, OTPPurpose purpose) throws CustomException {
         try {
             var user = userRepo.findByEmail(email);
             if (user.isPresent()) {
@@ -185,7 +196,7 @@ public class AuthService {
             var user = userRepo.findByEmail(request.getEmail());
             if (user.isPresent()) {
                 var userGet = user.get();
-                if (purpose == OTPPurpose.register && userGet.getAccountVerified()) {
+                if (purpose == OTPPurpose.REGISTER && userGet.getAccountVerified()) {
                     throw new CustomException(StringConstants.alreadyAccountVerified);
                 }
                 otpService.generateAndSendOTP(userGet, purpose);

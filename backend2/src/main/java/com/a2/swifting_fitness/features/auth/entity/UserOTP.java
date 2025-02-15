@@ -36,6 +36,6 @@ public class UserOTP {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private FitnessFolks user;
+    private Users user;
 
 }

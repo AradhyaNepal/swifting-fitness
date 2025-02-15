@@ -6,7 +6,7 @@ import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.exception.OTPResendLimitException;
 import com.a2.swifting_fitness.common.model.EmailDetails;
 import com.a2.swifting_fitness.common.service.EmailService;
-import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
+import com.a2.swifting_fitness.features.auth.entity.Users;
 import com.a2.swifting_fitness.features.auth.entity.UserOTP;
 import com.a2.swifting_fitness.features.auth.repository.UserOTPRepository;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class OTPService {
     final private UserOTPRepository otpRepository;
     final private PasswordEncoder passwordEncoder;
 
-    public void generateAndSendOTP(FitnessFolks user, OTPPurpose purpose) throws CustomException {
+    public void generateAndSendOTP(Users user, OTPPurpose purpose) throws CustomException {
         if (!user.isAccountNonLocked()) {
             throw new CustomException(StringConstants.userLockedCannotContinue);
         }
@@ -52,7 +51,7 @@ public class OTPService {
     }
 
 
-    private List<UserOTP> checkNewOTPLimitAndExpireOldOTP(FitnessFolks user, Instant now, OTPPurpose purpose) throws CustomException {
+    private List<UserOTP> checkNewOTPLimitAndExpireOldOTP(Users user, Instant now, OTPPurpose purpose) throws CustomException {
         var sortedOTP = otpRepository.sortedOTP(user.getId(), purpose);
 
         mayThrowLotsOfOTPOnSpecificHour(sortedOTP, now);
@@ -87,12 +86,12 @@ public class OTPService {
     }
 
 
-    public boolean otpIsCorrect(FitnessFolks fitnessFolks, String enteredOTP, OTPPurpose purpose) throws CustomException {
-        if (!fitnessFolks.isAccountNonLocked()) {
+    public boolean otpIsCorrect(Users users, String enteredOTP, OTPPurpose purpose) throws CustomException {
+        if (!users.isAccountNonLocked()) {
             throw new CustomException(StringConstants.userLockedCannotContinue);
         }
         Instant now = Instant.now();
-        var notExpiredOtp = otpRepository.sortedOTP(fitnessFolks.getId(), purpose)
+        var notExpiredOtp = otpRepository.sortedOTP(users.getId(), purpose)
                 .stream()
                 .filter(
                         e -> e.getExpiry().isAfter(now) && passwordEncoder.matches(enteredOTP, e.getOtpEncoded())

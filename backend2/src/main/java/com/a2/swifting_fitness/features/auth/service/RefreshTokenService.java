@@ -2,9 +2,9 @@ package com.a2.swifting_fitness.features.auth.service;
 
 import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.exception.CustomException;
-import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
+import com.a2.swifting_fitness.features.auth.entity.Users;
 import com.a2.swifting_fitness.features.auth.entity.RefreshToken;
-import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
+import com.a2.swifting_fitness.features.auth.repository.UsersRepository;
 import com.a2.swifting_fitness.features.auth.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,10 +22,10 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
 
-    private final FitnessFolksRepository userRepository;
+    private final UsersRepository userRepository;
     private final BlockUserService blockUserService;
 
-    public RefreshToken createRefreshToken(FitnessFolks user) {
+    public RefreshToken createRefreshToken(Users user) {
         RefreshToken refreshToken = RefreshToken.builder()
                 .userInfo(user)
                 .token(UUID.randomUUID().toString())
@@ -35,7 +35,7 @@ public class RefreshTokenService {
     }
 
 
-    public RefreshToken verifyThenDeleteOrCreateNew(String token, FitnessFolks user) throws CustomException {
+    public RefreshToken verifyThenDeleteOrCreateNew(String token, Users user) throws CustomException {
         if (!user.isAccountNonLocked()) {
             throw new CustomException(StringConstants.userLockedCannotContinue);
         }

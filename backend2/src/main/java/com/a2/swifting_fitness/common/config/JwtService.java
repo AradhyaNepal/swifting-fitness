@@ -2,6 +2,7 @@ package com.a2.swifting_fitness.common.config;
 
 import com.a2.swifting_fitness.common.enums.UserRole;
 import com.a2.swifting_fitness.common.model.JWTExtracted;
+import com.a2.swifting_fitness.features.auth.entity.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -37,8 +38,10 @@ public class JwtService {
     }
 
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(Users userDetails) {
+        var map=new HashMap<String,Object>();
+        map.put("role",userDetails.getRole().toRoleString());
+        return generateToken(map, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {

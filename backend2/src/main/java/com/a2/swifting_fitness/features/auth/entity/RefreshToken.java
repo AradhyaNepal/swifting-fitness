@@ -23,5 +23,5 @@ public class RefreshToken {
     private Instant expiryDate;
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
-    private FitnessFolks userInfo;
+    private Users userInfo;
 }
