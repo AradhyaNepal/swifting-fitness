@@ -49,4 +49,6 @@ public class StringConstants {
     public static final String proteinMustBeGreaterThanZero = "Diet protein cannot be less than zero";
     public static String alreadyAccountVerified = "Account already verified. PLease login to continue using";
     public static String adminRegisteredSuccessfully="Admin registered successfully.";
+    public static String dietAddedSuccessfully="Diet added successfully.";
+    public static String dietFetchedSuccessfully="Diet fetched successfully";
 }

@@ -12,7 +12,7 @@ import lombok.Data;
 public class DietRequest {
     @NotEmpty(message = StringConstants.dietNameMustNotBeEmpty)
     private String name;
-    private  String image;
+
     @NotNull(message = StringConstants.dietCaloriesMustNotBeEmpty)
     @Min(value = 0,message = StringConstants.proteinMustBeGreaterThanZero)
     private  Integer protein;
