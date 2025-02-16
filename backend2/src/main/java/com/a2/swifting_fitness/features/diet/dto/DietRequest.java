@@ -10,7 +10,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class DietRequest {
-
     @NotEmpty(message = StringConstants.dietNameMustNotBeEmpty)
     private String name;
     private  String image;

@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.features.diet.service;
 
+import com.a2.swifting_fitness.features.diet.dto.DietRequest;
 import com.a2.swifting_fitness.features.diet.entity.Diet;
 import com.a2.swifting_fitness.features.diet.repository.DietRepository;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,15 @@ public class DietService {
         return repository.findAll(pageable);
     }
 
-    public  Diet addDiet(){
-
+    public  Diet addDiet(DietRequest request){
+        return  repository.save(
+                Diet.builder()
+                        .name(request.getName())
+                        .fat(request.getFat())
+                        .calories(request.getCalories())
+                        .carbs(request.getCarbs())
+                        .protein(request.getProtein())
+                        .build()
+        );
     }
 }
