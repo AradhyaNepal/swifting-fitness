@@ -40,5 +40,13 @@ public class StringConstants {
     public static final String invalidRefreshToken = "Invalid refresh token";
     public static final String deviceIdRequired = "Device Id is required";
     public static final String newDeviceSet = "New device has been set for your account";
+    public static final String dietNameMustNotBeEmpty = "Diet name must not be empty";
+    public static final String dietCaloriesMustNotBeEmpty ="Diet calories must not be empty" ;
+    public static final String dietProteinMustNotBeEmpty = "Diet protein must not be empty";
+    public static final String fatMustBeGreaterThanZero = "Diet fat cannot be less than zero";
+    public static final String carbsMustBeGreaterThanZero = "Diet carbs cannot be less than zero";
+    public static final String caloriesMustBeGreaterThanZero = "Diet calories cannot be less than zero";
+    public static final String proteinMustBeGreaterThanZero = "Diet protein cannot be less than zero";
     public static String alreadyAccountVerified = "Account already verified. PLease login to continue using";
+    public static String adminRegisteredSuccessfully="Admin registered successfully.";
 }
