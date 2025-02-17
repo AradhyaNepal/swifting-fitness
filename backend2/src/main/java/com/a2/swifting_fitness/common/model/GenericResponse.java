@@ -16,7 +16,7 @@ public class GenericResponse<T> {
     private List<String> errors;
     private String message;
 
-    private  int totalItems;
+    private  long totalItems;
     private  int totalPages;
     private  boolean haveNext;
 

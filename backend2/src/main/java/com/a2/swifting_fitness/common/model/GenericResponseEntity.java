@@ -18,7 +18,7 @@ public class GenericResponseEntity<T> extends ResponseEntity<GenericResponse<T>>
 
     static public <T> GenericResponseEntity<List<T>> successWithPagination(Page<T> data, String message) {
         var items = data.get().toList();
-        var totalItems=data.getNumber();
+        var totalItems=data.getTotalElements();
         var pageSize = data.getSize();
         var totalPage=data.getTotalPages();
         var currentPage= data.getNumber()+1;//Page number starts from 0 and for frontend it starts from 1
@@ -26,7 +26,7 @@ public class GenericResponseEntity<T> extends ResponseEntity<GenericResponse<T>>
                 GenericResponse.<List<T>>builder()
                         .data(items)
                         .message(message)
-                        .haveNext((currentPage*pageSize)>totalItems)
+                        .haveNext(totalItems>((long) currentPage *pageSize))
                         .totalPages(totalPage)
                         .totalItems(totalItems)
                         .build(),
