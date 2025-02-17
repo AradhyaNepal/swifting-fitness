@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.common.model;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,23 @@ public class GenericResponseEntity<T> extends ResponseEntity<GenericResponse<T>>
 
     static public <T> GenericResponseEntity<T> successWithData(T data, String message) {
         return new GenericResponseEntity<>(GenericResponse.<T>builder().data(data).message(message).build(), HttpStatus.OK);
+    }
+
+    static public <T> GenericResponseEntity<List<T>> successWithPagination(Page<T> data, String message) {
+        var items = data.get().toList();
+        var totalItems=data.getNumber();
+        var pageSize = data.getSize();
+        var totalPage=data.getTotalPages();
+        var currentPage= data.getNumber()+1;//Page number starts from 0 and for frontend it starts from 1
+        return new GenericResponseEntity<>(
+                GenericResponse.<List<T>>builder()
+                        .data(items)
+                        .message(message)
+                        .haveNext((currentPage*pageSize)>totalItems)
+                        .totalPages(totalPage)
+                        .totalItems(totalItems)
+                        .build(),
+                HttpStatus.OK );
     }
 
     static public GenericResponseEntity<Void> successWithMessage(String message) {

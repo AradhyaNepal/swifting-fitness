@@ -1,6 +1,7 @@
 package com.a2.swifting_fitness.features.auth.service;
 
 import com.a2.swifting_fitness.common.enums.OTPPurpose;
+import com.a2.swifting_fitness.common.enums.UserRole;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.config.JwtService;
@@ -118,6 +119,7 @@ public class AuthService {
             user.setEmail(request.getEmail());
             user.setAccountVerified(false);
             user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setRole(UserRole.user);
             user = userRepo.save(user);
             otpService.generateAndSendOTP(user, OTPPurpose.REGISTER);
             return message;

@@ -5,7 +5,6 @@ import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
 import com.a2.swifting_fitness.features.diet.dto.DietRequest;
 import com.a2.swifting_fitness.features.diet.dto.DietResponse;
-import com.a2.swifting_fitness.features.diet.entity.Diet;
 import com.a2.swifting_fitness.features.diet.service.DietService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
