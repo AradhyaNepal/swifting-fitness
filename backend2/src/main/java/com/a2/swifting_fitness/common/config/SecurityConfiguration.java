@@ -34,8 +34,9 @@ public class SecurityConfiguration {
                                         "/api/v1/auth/**",
                                         "/api/v1/refresh",
                                         "/assets/**").permitAll()
-                                .anyRequest().hasRole(UserRole.user.toRoleString())
-                )
+//                                .anyRequest().hasAnyRole(UserRole.user.toRoleString(),UserRole.admin.toRoleString())
+
+                                .anyRequest().permitAll()                )
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

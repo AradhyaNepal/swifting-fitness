@@ -11,13 +11,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping(value = "/api/v1/user/diet")
 @AllArgsConstructor
+@RestController
 public class UserDietController {
     final DietService service;
 
-    @GetMapping
+    @GetMapping()
     GenericResponseEntity<Page<Diet>> getAllDiet(@PathParam(value = "pageSize") Integer pageSize, @PathParam(value = "pageNumber") Integer pageNumber) {
         return GenericResponseEntity.successWithData(service.getDietList(pageSize, pageSize), StringConstants.dietFetchedSuccessfully);
     }

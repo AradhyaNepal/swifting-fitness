@@ -51,4 +51,5 @@ public class StringConstants {
     public static String adminRegisteredSuccessfully="Admin registered successfully.";
     public static String dietAddedSuccessfully="Diet added successfully.";
     public static String dietFetchedSuccessfully="Diet fetched successfully";
+    public static String cannotSaveFile="Cannot save file";
 }

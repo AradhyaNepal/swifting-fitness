@@ -93,7 +93,7 @@ public class AuthService {
 
     private void checkForAdmin(LoginRequest loginRequest,Users users) throws CustomException {
         if(loginRequest instanceof AdminLoginRequest loginCasted){
-            if(users.getDeviceId()==null || loginCasted.getDeviceId().equals(users.getDeviceId())){
+            if(users.getDeviceId()==null || !loginCasted.getDeviceId().equals(users.getDeviceId())){
                 var map=new HashMap<String,Object>();
                 map.put("deviceIDNotSet",true);
                 throw  new CustomException("Please setup device id to continue",HttpStatus.FORBIDDEN,map);

@@ -1,6 +1,7 @@
 package com.a2.swifting_fitness.features.file_storage.service;
 
 
+import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.enums.FileType;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.utils.UserFromSecurityContext;
@@ -13,6 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 
 @Service
@@ -20,16 +25,22 @@ import java.time.Instant;
 public class FileStorageService {
 
     final FileStorageRepository repository;
-    @Value("${file_path}")
-    private  String IMAGE_PATH;
+//    @Value("${file_path}")
+    private final Path rootLocation = Paths.get("uploads");
+
     public FileStorage saveFile(MultipartFile file, FileType fileType,boolean isOpen) throws IOException, CustomException {
-        var extension=file.getContentType();
-        var filePath= IMAGE_PATH+"/"+Instant.now().toString()+"."+extension;
-        file.transferTo(new File(filePath));
+       if( !Files.exists(rootLocation)){
+           Files.createDirectories(rootLocation);
+       }
+        var fileName=file.getOriginalFilename();
+        long currentTime = System.currentTimeMillis();
+        var extension=fileName.substring(fileName.lastIndexOf(".") + 1);
+        Path destinationFile = rootLocation.resolve(currentTime+"."+extension).normalize().toAbsolutePath();
+        file.transferTo(destinationFile);
         var user= UserFromSecurityContext.get();
         return repository.save(
                 FileStorage.builder()
-                        .filePath(filePath)
+                        .filePath(destinationFile.toString())
                         .fileType(fileType)
                         .extension(extension)
                         .isOpen(isOpen)

@@ -33,7 +33,7 @@ public class Diet {
     @NotNull
     private int protein;
 
-    private int fat;
+    private Integer fat;
 
-    private int carbs;
+    private Integer carbs;
 }

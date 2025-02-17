@@ -3,7 +3,9 @@ package com.a2.swifting_fitness.features.diet.service;
 import com.a2.swifting_fitness.common.enums.FileType;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.features.diet.dto.DietRequest;
+import com.a2.swifting_fitness.features.diet.dto.DietResponse;
 import com.a2.swifting_fitness.features.diet.entity.Diet;
+import com.a2.swifting_fitness.features.diet.mapper.DietToDietResponse;
 import com.a2.swifting_fitness.features.diet.repository.DietRepository;
 import com.a2.swifting_fitness.features.file_storage.service.FileStorageService;
 import lombok.AllArgsConstructor;
@@ -27,9 +29,9 @@ public class DietService {
         return repository.findAll(pageable);
     }
 
-    public  Diet addDiet(DietRequest request, MultipartFile image) throws IOException, CustomException {
-        var fileStorage=fileStorageService.saveFile(image, FileType.IMAGE,true);
-        return  repository.save(
+    public DietResponse addDiet(DietRequest request) throws IOException, CustomException {
+        var fileStorage=fileStorageService.saveFile(request.getImage(), FileType.IMAGE,true);
+        var diet=  repository.save(
                 Diet.builder()
                         .name(request.getName())
                         .image(fileStorage)
@@ -39,5 +41,6 @@ public class DietService {
                         .protein(request.getProtein())
                         .build()
         );
+        return  DietToDietResponse.map(diet);
     }
 }
