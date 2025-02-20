@@ -1,7 +1,7 @@
 package com.a2.swifting_fitness.common.config;
 
 import com.a2.swifting_fitness.common.constants.StringConstants;
-import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
+import com.a2.swifting_fitness.features.auth.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-    private final FitnessFolksRepository repo;
+    private final UsersRepository repo;
 
 
     @Bean

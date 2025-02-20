@@ -1,6 +1,6 @@
 package com.a2.swifting_fitness.features.auth.dto;
 
-import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
+import com.a2.swifting_fitness.features.auth.entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,12 +16,12 @@ public class UserDetailsResponse {
     private int healthyPercentage;
     private String userTire;
 
-    static public UserDetailsResponse fromFitnessFolks(FitnessFolks fitnessFolks) {
+    static public UserDetailsResponse fromFitnessFolks(Users users) {
         return UserDetailsResponse.builder()
-                .uid(fitnessFolks.getUid())
-                .fullName(fitnessFolks.getFullName())
-                .email(fitnessFolks.getEmail())
-                .profile(fitnessFolks.getProfile())
+                .uid(users.getUid())
+                .fullName(users.getFullName())
+                .email(users.getEmail())
+                .profile(users.getProfile())
                 .healthyPercentage(88)
                 .userTire("Pro")
                 .build();

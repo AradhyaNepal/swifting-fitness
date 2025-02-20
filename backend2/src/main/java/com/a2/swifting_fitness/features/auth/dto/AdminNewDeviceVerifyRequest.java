@@ -5,22 +5,19 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class LoginRequest {
-
+@Data
+public class AdminNewDeviceVerifyRequest {
 
     @NotEmpty(message = StringConstants.emailRequired)
     @Email(message = StringConstants.emailNotValid)
     private String email;
 
-    @NotEmpty(message = StringConstants.passwordRequired)
-    private String password;
-
-    private String fcmToken;
+    @NotEmpty(message = StringConstants.otpRequired)
+    private String otp;
 
 
+    @NotEmpty(message = StringConstants.deviceIdRequired)
+    private String deviceId;
 }

@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.common.config;
 
+import com.a2.swifting_fitness.common.enums.UserRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NotNull FilterChain filterChain
     ) throws ServletException, IOException {
         var authHeader = request.getHeader("Authorization");
+        var deviceIdIfAdmin = request.getHeader("deviceId");
         String jwt;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -38,6 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var user = userDetailsService.loadUserByUsername(userName);
             if (jwtService.isTokenValid(jwt, user)) {
+                if (!(user.getRole() == UserRole.admin && user.getDeviceId() != null && user.getDeviceId().equals(deviceIdIfAdmin))) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
                 var authToken = new UsernamePasswordAuthenticationToken(
                         user,
                         null,

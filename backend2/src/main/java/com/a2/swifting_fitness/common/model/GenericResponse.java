@@ -16,5 +16,11 @@ public class GenericResponse<T> {
     private List<String> errors;
     private String message;
 
+    private  long totalItems;
+    private  int currentPage;
+    private  int pageSize;
+    private  int totalPages;
+    private  boolean haveNext;
+
 
 }

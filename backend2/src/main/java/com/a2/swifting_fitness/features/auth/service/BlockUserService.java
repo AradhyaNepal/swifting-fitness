@@ -1,14 +1,14 @@
 package com.a2.swifting_fitness.features.auth.service;
 
-import com.a2.swifting_fitness.features.auth.entity.FitnessFolks;
-import com.a2.swifting_fitness.features.auth.repository.FitnessFolksRepository;
+import com.a2.swifting_fitness.features.auth.entity.Users;
+import com.a2.swifting_fitness.features.auth.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 @Service
 public class BlockUserService {
-    public void setBlockUser(FitnessFolks user) {
+    public void setBlockUser(Users user) {
         var wrongAttempts = user.getWrongAttempts() + 1;
         if (wrongAttempts >= 9) {
             user.setWrongAttempts(0);
@@ -18,7 +18,7 @@ public class BlockUserService {
         }
     }
 
-    public void removeUserAllBlockageAndSave(FitnessFolks user, FitnessFolksRepository repository) {
+    public void removeUserAllBlockageAndSave(Users user, UsersRepository repository) {
         user.setWrongAttempts(0);
         user.setIsBlockedTill(null);
         repository.save(user);
