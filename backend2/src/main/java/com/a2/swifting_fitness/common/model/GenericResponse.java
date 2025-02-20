@@ -17,6 +17,8 @@ public class GenericResponse<T> {
     private String message;
 
     private  long totalItems;
+    private  int currentPage;
+    private  int pageSize;
     private  int totalPages;
     private  boolean haveNext;
 

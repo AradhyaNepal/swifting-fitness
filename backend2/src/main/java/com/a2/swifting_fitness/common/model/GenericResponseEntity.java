@@ -29,6 +29,8 @@ public class GenericResponseEntity<T> extends ResponseEntity<GenericResponse<T>>
                         .haveNext(totalItems>((long) currentPage *pageSize))
                         .totalPages(totalPage)
                         .totalItems(totalItems)
+                        .pageSize(pageSize)
+                        .currentPage(currentPage)
                         .build(),
                 HttpStatus.OK );
     }
