@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                                         "/swagger-ui.html",
                                         "/api/v1/auth/**",
                                         "/api/v1/refresh",
+                                        "/api/v1/open/file/**",
                                         "/assets/**").permitAll()
                                 .requestMatchers(
                                         "api/v1/user/**"
