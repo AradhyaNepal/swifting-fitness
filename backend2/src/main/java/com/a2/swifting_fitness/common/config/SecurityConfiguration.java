@@ -4,6 +4,7 @@ package com.a2.swifting_fitness.common.config;
 
 import com.a2.swifting_fitness.common.enums.UserRole;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -33,12 +34,16 @@ public class SecurityConfiguration {
                                         "/swagger-ui.html",
                                         "/api/v1/auth/**",
                                         "/api/v1/refresh",
-                                        "/api/v1/open/file/**",
+                                        "/api/v1/file/open/**",
                                         "/assets/**").permitAll()
+                                .requestMatchers(  "api/v1/file/**").hasAnyRole(UserRole.user.toRoleString(),UserRole.admin.toRoleString())
                                 .requestMatchers(
                                         "api/v1/user/**"
                                 ).hasRole(UserRole.user.toRoleString())
-                                .requestMatchers("api/v1/admin/**")
+                                .requestMatchers(
+                                        "api/v1/admin/**"
+
+                                )
                                 .hasRole(UserRole.admin.toRoleString())
                 )
                 .sessionManagement(

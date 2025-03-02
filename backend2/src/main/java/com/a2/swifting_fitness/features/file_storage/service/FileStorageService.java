@@ -56,18 +56,39 @@ public class FileStorageService {
             if(!valueGet.getIsOpen()){
                 throw  new CustomException("Image is not open", HttpStatus.FORBIDDEN);
             }
-            var file = rootLocation.resolve(valueGet.getFilePath()).normalize().toAbsolutePath().toFile();
-            if (!file.exists()) {
-                throw new CustomException("No image found",HttpStatus.NOT_FOUND);
-            }
-
-            byte[] imageBytes = Files.readAllBytes(file.toPath());
-            String contentType = Files.probeContentType(file.toPath());
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .body(imageBytes);
+            return extractImageBinary(valueGet);
 
         }
+    }
+
+
+
+    public ResponseEntity<?> getMyFile(String uid) throws CustomException, IOException {
+        var value=repository.findById(uid);
+        if(value.isEmpty()){
+            throw  new CustomException("No image found");
+        }else{
+            var valueGet=value.get();
+            var user=UserFromSecurityContext.get();
+            if(!valueGet.getIsOpen() && valueGet.getCreatedBy().getId()!=user.getId()){
+                throw  new CustomException("Image is not open and you don't have permission to view", HttpStatus.FORBIDDEN);
+            }
+            return extractImageBinary(valueGet);
+
+        }
+    }
+
+    private ResponseEntity<byte[]> extractImageBinary(FileStorage valueGet) throws CustomException, IOException {
+        var file = rootLocation.resolve(valueGet.getFilePath()).normalize().toAbsolutePath().toFile();
+        if (!file.exists()) {
+            throw new CustomException("No image found",HttpStatus.NOT_FOUND);
+        }
+
+        byte[] imageBytes = Files.readAllBytes(file.toPath());
+        String contentType = Files.probeContentType(file.toPath());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(imageBytes);
     }
 }
