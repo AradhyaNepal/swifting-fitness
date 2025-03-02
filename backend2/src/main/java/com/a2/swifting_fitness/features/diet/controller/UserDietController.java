@@ -4,6 +4,7 @@ import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
 import com.a2.swifting_fitness.features.diet.dto.DietResponse;
 import com.a2.swifting_fitness.features.diet.service.DietService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequestMapping(value = "/api/v1/user/diet")
 @AllArgsConstructor
 @RestController
+@SecurityRequirement(name = "Authorization")
 public class UserDietController {
     final DietService service;
 

@@ -22,6 +22,7 @@ public class AdminDietController {
     final DietService service;
 
     @SecurityRequirement(name = "Authorization")
+    @SecurityRequirement(name = "Device-Id")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public GenericResponseEntity<DietResponse> saveDiet(@Valid @ModelAttribute DietRequest request) throws IOException, CustomException {
         return  GenericResponseEntity.successWithData(service.addDiet(request),StringConstants.dietAddedSuccessfully);

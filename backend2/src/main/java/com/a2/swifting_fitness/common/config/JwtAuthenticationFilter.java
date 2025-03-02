@@ -41,7 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var user = userDetailsService.loadUserByUsername(userName);
             if (jwtService.isTokenValid(jwt, user)) {
-                if (!(user.getRole() == UserRole.admin && user.getDeviceId() != null && user.getDeviceId().equals(deviceIdIfAdmin))) {
+                if (user.getRole() == UserRole.admin && (user.getDeviceId() == null || !user.getDeviceId().equals(deviceIdIfAdmin))) {
+                    System.out.println("No device id");
                     filterChain.doFilter(request, response);
                     return;
                 }
