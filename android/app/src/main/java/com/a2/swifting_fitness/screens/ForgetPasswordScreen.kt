@@ -1,6 +1,7 @@
 package com.a2.swifting_fitness.screens
+import androidx.compose.runtime.Composable
 
-import androidx.activity.ComponentActivity
+@Composable
+fun ForgetPasswordScreen(goToLogin: () -> Unit){
 
-class ForgetPasswordScreen(goToLogin: () -> Unit) :ComponentActivity() {
 }

@@ -1,6 +1,8 @@
 package com.a2.swifting_fitness.screens
 
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.Composable
 
-class RegisterOTPScreen(goToRegister: () -> Unit, goToHome: () -> Unit) :ComponentActivity() {
+@Composable
+fun RegisterOTPScreen(goToRegister: () -> Unit, goToHome: () -> Unit){
 }

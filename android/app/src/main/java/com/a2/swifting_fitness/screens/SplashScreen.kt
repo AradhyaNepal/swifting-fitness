@@ -1,13 +1,8 @@
 package com.a2.swifting_fitness.screens
 
-import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -16,33 +11,38 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.a2.swifting_fitness.R
+import com.a2.swifting_fitness.view_model.SplashViewModel
+import com.a2.swifting_fitness.view_model.SplashViewModelFactory
+import kotlinx.coroutines.delay
 
-@SuppressLint("CustomSplashScreen")
-class SplashScreen(goToLoginScreen: () -> Unit, goToOnBoardingScreen: () -> Unit) :
-    ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            SplashContent()
-        }
-    }
-}
 
 @Preview(showSystemUi = true)
 @Composable
 private fun Preview() {
-    SplashContent()
+    SplashScreen (
+        goToLoginScreen = {
+            println("Going to login")
+        },
+        goToOnBoardingScreen = {
+            println("Going to on boarding")
+        }
+    )
 }
 
 @Composable
-fun SplashContent(modifier: Modifier = Modifier) {
+fun SplashScreen(goToLoginScreen: () -> Unit, goToOnBoardingScreen: () -> Unit) {
     val infiniteTransition = rememberInfiniteTransition(label = "rotation")
     val angle = infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -53,16 +53,29 @@ fun SplashContent(modifier: Modifier = Modifier) {
         ),
         label = "angle"
     )
+    val context = LocalContext.current
+    val viewModel: SplashViewModel = viewModel(factory = SplashViewModelFactory(context))
+
+    val isFirstTime = viewModel.isFirstTime.collectAsState(initial = true).value
+    LaunchedEffect(Unit) {
+        delay(5000)
+        if (isFirstTime) {
+            goToOnBoardingScreen()
+        } else {
+            goToLoginScreen()
+        }
+    }
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
+        modifier = Modifier
             .background(Color(0xFFFF0000))
             .fillMaxSize()
     ) {
         Image(
             painter = painterResource(R.drawable.app_logo),
             contentDescription = "Logo",
+            colorFilter = ColorFilter.tint(Color(0xFF0000FF)),
             modifier=Modifier.rotate(angle.value)
 
             )

@@ -1,6 +1,8 @@
 package com.a2.swifting_fitness.screens
 
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.Composable
 
-class RegisterScreen(goToLogin: () -> Unit, goToOtpScreen: () -> Unit) :ComponentActivity() {
+@Composable
+fun RegisterScreen(goToLogin: () -> Unit, goToOtpScreen: () -> Unit) {
 }
