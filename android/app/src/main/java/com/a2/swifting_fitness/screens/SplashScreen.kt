@@ -56,13 +56,15 @@ fun SplashScreen(goToLoginScreen: () -> Unit, goToOnBoardingScreen: () -> Unit) 
     val context = LocalContext.current
     val viewModel: SplashViewModel = viewModel(factory = SplashViewModelFactory(context))
 
-    val isFirstTime = viewModel.isFirstTime.collectAsState(initial = true).value
-    LaunchedEffect(Unit) {
-        delay(5000)
-        if (isFirstTime) {
-            goToOnBoardingScreen()
-        } else {
-            goToLoginScreen()
+     LaunchedEffect(Unit) {
+        delay(2500)
+        viewModel.isFirstTime.collect{
+            firstTime->
+            if(firstTime){
+                goToOnBoardingScreen()
+            }else{
+                goToLoginScreen()
+            }
         }
     }
 
