@@ -1,16 +1,16 @@
 package com.a2.swifting_fitness.screens.compose
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -27,11 +28,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.a2.swifting_fitness.R
 
 
 @Composable
 fun CustomTextField(
-    modifier: Modifier=Modifier,
+    modifier: Modifier = Modifier,
     value: String,
     label: String,
     onValueChange: (String) -> Unit,
@@ -40,15 +42,16 @@ fun CustomTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     action: ImeAction = ImeAction.Next,
     isPassword: Boolean = false,
-    trailingIcon: @Composable (() -> Unit)?=null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)
 ) {
 
     val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(isPassword) }
-    Box (
+    Box(
         modifier = modifier
-            .fillMaxWidth().background(color = Color(0x11FFFFFF), shape = RoundedCornerShape(12.dp)),
-    ){
+            .fillMaxWidth()
+            .background(color = Color(0x11FFFFFF), shape = RoundedCornerShape(12.dp)),
+    ) {
         OutlinedTextField(
             modifier = modifier
                 .fillMaxWidth(),
@@ -58,11 +61,17 @@ fun CustomTextField(
             trailingIcon = {
                 trailingIcon?.invoke()
                 if (isPassword) {
-                    val image = if (passwordVisible) Icons.Filled.Lock else Icons.Filled.CheckCircle
+                    val image =
+                        if (passwordVisible) R.drawable.solid_eye else R.drawable.app_logo
                     val description = if (passwordVisible) "Hide password" else "Show password"
-                    IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
-                        Icon(image, contentDescription = description)
-                    }
+                    Image(
+                        contentDescription = description,
+                        painter = painterResource(image),
+                        modifier = Modifier.clickable {
+                            setPasswordVisible(!passwordVisible)
+                        }.size(30.dp)
+
+                    )
 
                 }
             },
@@ -97,10 +106,10 @@ fun CustomTextField(
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Yellow,
-                focusedLeadingIconColor = Color.Magenta,
-                unfocusedLeadingIconColor = Color.Cyan,
-                disabledLeadingIconColor = Color.Transparent,
-                errorLeadingIconColor = Color.Transparent,
+                focusedLeadingIconColor = Color.White,
+                unfocusedLeadingIconColor = Color.White,
+                disabledLeadingIconColor = Color.White,
+                errorLeadingIconColor = Color.White,
                 focusedTrailingIconColor = Color.Magenta,
                 unfocusedTrailingIconColor = Color.Cyan,
                 disabledTrailingIconColor = Color.Transparent,

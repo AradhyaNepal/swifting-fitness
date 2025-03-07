@@ -4,8 +4,10 @@ package com.a2.swifting_fitness.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,24 +34,28 @@ fun LoginScreen(
         modifier = Modifier
             .background(color = Color(0xFF000000))
             .fillMaxSize(),
-        ){
-        LoginUpperCard()
-        Column (
-            modifier = Modifier.padding(horizontal = 20.0.dp, vertical = 30.0.dp)
-        ){
-            LoginForm(goToHomeScreen = {
-                goToHomeScreen()
-            })
-            LoginAlternativeOptions(
-                goToRegisterScreen = {
-                    goToRegisterScreen()
-                },
-                goToForgetPasswordScreen = {
-                    goToForgetPasswordScreen()
+        content =
+            {
+                LoginUpperCard()
+                Column (
+                    modifier = Modifier.padding(horizontal = 20.0.dp, vertical = 30.0.dp)
+                ){
+                    LoginForm(goToHomeScreen = {
+                        goToHomeScreen()
+                    })
+                    Spacer(modifier = Modifier.size(45.dp))
+                    LoginAlternativeOptions(
+                        goToRegisterScreen = {
+                            goToRegisterScreen()
+                        },
+                        goToForgetPasswordScreen = {
+                            goToForgetPasswordScreen()
+                        }
+                    )
                 }
-            )
-        }
-    }
+            }
+
+        )
 }
 
 

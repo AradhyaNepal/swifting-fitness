@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.a2.swifting_fitness.R
 import com.a2.swifting_fitness.data.OnBoardingModel
+import com.a2.swifting_fitness.screens.compose.CustomButton
 import com.a2.swifting_fitness.view_model.OnBoardingViewModel
 import com.a2.swifting_fitness.view_model.SplashViewModel
 import com.a2.swifting_fitness.view_model.SplashViewModelFactory
@@ -212,27 +213,11 @@ fun WelcomeCard(pagerState: PagerState) {
                 color = Color(0xFFFFFFFF)
             )
             Spacer(modifier = Modifier.size(40.0.dp))
-            Button(colors = ButtonDefaults.buttonColors().copy(
-                containerColor = Color(0xFFF77500),
-                contentColor = Color(0xFFFFFFFF)
-            ), onClick = {
+            CustomButton(modifier = Modifier.width(200.dp), onClick = {
                 scope.launch {
                     pagerState.animateScrollToPage(1)
                 }
-
-            }) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Get Started",
-                    )
-                    Spacer(modifier = Modifier.size(7.5.dp))
-                    Image(
-                        painter = painterResource(R.drawable.monotone_arrow_right),
-                        contentDescription = "Arrow",
-                    )
-                }
-
-            }
+            }, title = "Get Started")
             Spacer(modifier = Modifier.size(60.0.dp))
         }
     }

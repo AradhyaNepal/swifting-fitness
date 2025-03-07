@@ -35,6 +35,7 @@ fun LoginForm(modifier: Modifier = Modifier, goToHomeScreen: () -> Unit) {
         CustomTextField(
             value = email,
             label = "Email",
+
             onValueChange = { setEmail(it) }
         ){
             Image(
@@ -54,6 +55,13 @@ fun LoginForm(modifier: Modifier = Modifier, goToHomeScreen: () -> Unit) {
                 contentDescription = "Password"
             )
         }
+        Spacer(Modifier.size(20.dp))
+        CustomButton(
+            title = "Login",
+            onClick = {
+
+            }
+        )
 
     }
 }

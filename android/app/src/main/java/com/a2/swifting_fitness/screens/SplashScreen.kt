@@ -80,14 +80,19 @@ fun SplashScreen(goToLoginScreen: () -> Unit, goToOnBoardingScreen: () -> Unit) 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .background(Color(0x550000FF))
+            .background(Color(0xFF000000))
             .fillMaxSize()
             .scale(size.value)
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFFF0000))
+        )
         Image(
             painter = painterResource(R.drawable.app_logo),
             contentDescription = "Logo",
-            colorFilter = ColorFilter.tint(Color(0xFFFF00AA)),
+            colorFilter = ColorFilter.tint(Color(0x99000000)),
             modifier=Modifier.rotate(angle.value)
 
             )
