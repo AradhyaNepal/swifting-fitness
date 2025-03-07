@@ -70,9 +70,9 @@ fun LoginForm(modifier: Modifier = Modifier, goToHomeScreen: () -> Unit) {
             title = "Login",
             onClick = {
                 if (emailErrorMessage != null || passwordErrorMessage != null) {
-                    setShowError(true);
+                    setShowError(true)
                 } else {
-                    println("Login request sent")
+                   goToHomeScreen()
                 }
             }
         )

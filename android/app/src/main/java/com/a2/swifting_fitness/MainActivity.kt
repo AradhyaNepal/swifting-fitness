@@ -36,14 +36,24 @@ fun MyApp(){
     NavHost(navController = controller,startDestination="splash"){
         composable("splash"){
             SplashScreen(goToLoginScreen= {
-                controller.navigate("login")
+                controller.navigate("login"){
+                    popUpTo("splash") { inclusive = true }
+                    launchSingleTop = true
+                }
             }){
-                controller.navigate("onBoarding")
+                controller.navigate("onBoarding"){
+                    popUpTo("splash") { inclusive = true }
+                    launchSingleTop = true
+                }
             }
         }
         composable("onBoarding"){
             OnBoardingScreen{
-                controller.navigate("login")
+                controller.navigate("login"){
+                    popUpTo("onBoarding") { inclusive = true }
+                    launchSingleTop = true
+
+                }
             }
         }
         composable("login"){
@@ -55,7 +65,10 @@ fun MyApp(){
                     controller.navigate("register")
                 },
                 goToHomeScreen={
-                    controller.navigate("home")
+                    controller.navigate("home"){
+                        popUpTo("login") { inclusive = true }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
