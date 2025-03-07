@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.a2.swifting_fitness.R
 
 @Composable
-fun CustomButton(modifier: Modifier = Modifier,onClick:()->Unit,title:String) {
+fun CustomButton(modifier: Modifier = Modifier,title:String,onClick:()->Unit) {
     Button(modifier = modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors().copy(
         containerColor = Color(0xFFF77500),
         contentColor = Color(0xFFFFFFFF)
