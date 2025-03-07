@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -47,16 +48,25 @@ fun SplashScreen(goToLoginScreen: () -> Unit, goToOnBoardingScreen: () -> Unit) 
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2000, easing = LinearEasing),
+            animation = tween(durationMillis = 1500, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "angle"
+    )
+    val size = infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 3.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "size"
     )
     val context = LocalContext.current
     val viewModel: SplashViewModel = viewModel(factory = SplashViewModelFactory(context))
 
      LaunchedEffect(Unit) {
-        delay(2500)
+        delay(3000)
         viewModel.isFirstTime.collect{
             firstTime->
             if(firstTime){
@@ -70,13 +80,14 @@ fun SplashScreen(goToLoginScreen: () -> Unit, goToOnBoardingScreen: () -> Unit) 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .background(Color(0xFFFF0000))
+            .background(Color(0x550000FF))
             .fillMaxSize()
+            .scale(size.value)
     ) {
         Image(
             painter = painterResource(R.drawable.app_logo),
             contentDescription = "Logo",
-            colorFilter = ColorFilter.tint(Color(0xFF0000FF)),
+            colorFilter = ColorFilter.tint(Color(0xFFFF00AA)),
             modifier=Modifier.rotate(angle.value)
 
             )

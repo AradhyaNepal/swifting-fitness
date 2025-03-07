@@ -46,6 +46,7 @@ dependencies {
     implementation ("androidx.datastore:datastore-core:1.1.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation ("com.google.dagger:hilt-android:2.50")
+    implementation(libs.foundation.pager)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
