@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -39,7 +40,12 @@ import com.a2.swifting_fitness.R
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0x44000000))
+                .background(brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Transparent,
+                        Color(0xFF000000),
+                    )
+                ))
         )
         Column(
             modifier = Modifier.fillMaxSize(1f),
