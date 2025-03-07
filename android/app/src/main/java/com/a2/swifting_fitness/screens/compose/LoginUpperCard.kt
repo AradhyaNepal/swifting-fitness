@@ -43,7 +43,7 @@ import com.a2.swifting_fitness.R
                 .background(brush = Brush.verticalGradient(
                     colors = listOf(
                         Color.Transparent,
-                        Color(0xFF000000),
+                        Color(0xAA000000),
                     )
                 ))
         )
