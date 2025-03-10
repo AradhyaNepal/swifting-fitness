@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.a2.swifting_fitness.R
 
 
-@Composable fun LoginUpperCard()
+@Composable fun AuthUpperCard(heading:String, subHeading:String)
 {
     Box(
         modifier = Modifier
@@ -34,7 +34,7 @@ import com.a2.swifting_fitness.R
     ) {
         Image(
             painter = painterResource(R.drawable.login_image),
-            contentDescription = "Login Image",
+            contentDescription = "Upper Image",
             contentScale = ContentScale.Crop
         )
         Box(
@@ -53,7 +53,7 @@ import com.a2.swifting_fitness.R
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "Sign In to Fitness App",
+                heading,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -61,7 +61,7 @@ import com.a2.swifting_fitness.R
             )
             Spacer(modifier = Modifier.size(10.dp))
             Text(
-                "Let's personalize your fitness with AI",
+                subHeading,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,

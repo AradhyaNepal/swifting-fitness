@@ -2,7 +2,6 @@ package com.a2.swifting_fitness.screens
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.a2.swifting_fitness.screens.compose.LoginAlternativeOptions
 import com.a2.swifting_fitness.screens.compose.LoginForm
-import com.a2.swifting_fitness.screens.compose.LoginUpperCard
+import com.a2.swifting_fitness.screens.compose.AuthUpperCard
 
 
 @Preview(showSystemUi = true, showBackground = true)
@@ -35,29 +34,33 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .background(color = Color(0xFF000000))
-            .fillMaxSize().verticalScroll(rememberScrollState()),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         content =
-            {
-                LoginUpperCard()
-                Column (
-                    modifier = Modifier.padding(horizontal = 20.0.dp, vertical = 30.0.dp)
-                ){
-                    LoginForm(goToHomeScreen = {
-                        goToHomeScreen()
-                    })
-                    Spacer(modifier = Modifier.size(45.dp))
-                    LoginAlternativeOptions(
-                        goToRegisterScreen = {
-                            goToRegisterScreen()
-                        },
-                        goToForgetPasswordScreen = {
-                            goToForgetPasswordScreen()
-                        }
-                    )
-                }
+        {
+            AuthUpperCard(
+                heading = "Sign In to Fitness App",
+                subHeading = "Let's personalize your fitness with AI"
+            )
+            Column(
+                modifier = Modifier.padding(horizontal = 20.0.dp, vertical = 30.0.dp)
+            ) {
+                LoginForm(goToHomeScreen = {
+                    goToHomeScreen()
+                })
+                Spacer(modifier = Modifier.size(45.dp))
+                LoginAlternativeOptions(
+                    goToRegisterScreen = {
+                        goToRegisterScreen()
+                    },
+                    goToForgetPasswordScreen = {
+                        goToForgetPasswordScreen()
+                    }
+                )
             }
+        }
 
-        )
+    )
 }
 
 
