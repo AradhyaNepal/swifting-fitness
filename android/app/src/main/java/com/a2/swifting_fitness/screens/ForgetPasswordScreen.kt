@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.a2.swifting_fitness.R
 import com.a2.swifting_fitness.screens.compose.CustomButton
 import com.a2.swifting_fitness.screens.compose.CustomTextField
+import com.a2.swifting_fitness.screens.compose.OTPInputTextFields
 
 
 @Preview(showSystemUi = true)
@@ -35,20 +36,22 @@ private fun Preview() {
 
 @Composable
 fun ForgetPasswordScreen(goToLogin: () -> Unit) {
+    val (otpValue, setOTPValue) = remember { mutableStateOf(List(6) { "" }) }
     val (otpSent, setOTPSent) = remember { mutableStateOf(false) }
-    val (showError,setShowError)= remember{mutableStateOf(false)}
+    val (otpCompleted, setOtpCompleted) = remember { mutableStateOf(false) }
+    val (showError, setShowError) = remember { mutableStateOf(false) }
     val (email, setEmail) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
-    val emailErrorMessage = if (!email.contains("@")) "Please enter valid email" else null;
+    val emailErrorMessage = if (!email.contains("@")) "Please enter valid email" else null
     val passwordErrorMessage =
-        if (password.length < 8) "Password should be at least 8 characters" else null;
+        if (password.length < 8) "Password should be at least 8 characters" else null
     Column(
         modifier = Modifier
             .background(color = Color.Black)
             .fillMaxSize()
             .padding(20.dp)
     ) {
-        Column (modifier = Modifier.weight(1f)){
+        Column(modifier = Modifier.weight(1f)) {
             Spacer(Modifier.size(30.dp))
             NextPreviousButton(
                 resources = R.drawable.back_arrow,
@@ -93,18 +96,35 @@ fun ForgetPasswordScreen(goToLogin: () -> Unit) {
                     contentDescription = "Password"
                 )
             }
-            if(otpSent){
-                Text(text = "OTP will be here", color = Color.White)
+            if (otpSent) {
+                Spacer(Modifier.size(40.dp))
+                OTPInputTextFields(
+                    otpValues = otpValue,
+                    otpLength = 6,
+                    onUpdateOtpValuesByIndex = { index, value ->
+                        val newOtpValue = otpValue.toMutableList()
+                        newOtpValue[index] = value
+                        setOTPValue(newOtpValue)
+                        if(value.isEmpty()&&otpCompleted){
+                            setOtpCompleted(false)
+                        }
+                    },
+                    onOtpInputComplete = {
+                        setOtpCompleted(true)
+                    },
+
+                    )
             }
         }
 
-        CustomButton(title = "Send OTP"){
-            if(otpSent){
-//
-            }else{
+        CustomButton(title = if (otpSent) "Verify OTP" else "Send OTP", disabled = otpSent&&!otpCompleted) {
+            if (otpSent) {
+                println(otpValue)
+            } else {
                 if (emailErrorMessage != null || passwordErrorMessage != null) {
                     setShowError(true)
                 } else {
+                    println("OTP is sent")
                     setOTPSent(true)
                 }
             }

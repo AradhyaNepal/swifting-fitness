@@ -17,15 +17,17 @@ import androidx.compose.ui.unit.dp
 import com.a2.swifting_fitness.R
 
 @Composable
-fun CustomButton(modifier: Modifier = Modifier,title:String,onClick:()->Unit) {
+fun CustomButton(modifier: Modifier = Modifier,title:String,disabled: Boolean=false,onClick:()->Unit) {
     Button(modifier = modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors().copy(
         containerColor = Color(0xFFF77500),
-        contentColor = Color(0xFFFFFFFF)
-    ), onClick = onClick,
+        contentColor = Color(0xFFFFFFFF),
+        disabledContainerColor = Color(0xAAF77500)
+    ), onClick = onClick, enabled = !disabled
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text =title,
+                color = if(disabled)Color(0xFF000000)else Color(0xFFFFFFFF)
             )
             Spacer(modifier = Modifier.size(7.5.dp))
             Image(

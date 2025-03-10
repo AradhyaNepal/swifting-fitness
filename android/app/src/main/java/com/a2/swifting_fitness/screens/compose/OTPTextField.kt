@@ -1,32 +1,37 @@
 package com.a2.swifting_fitness.screens.compose
 
-package com.shivathapaa.otpinput
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 
 /**
  * [OTPInputTextFields] is a custom OTP input fields for the OTP verification.
@@ -70,79 +75,128 @@ fun OTPInputTextFields(
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
-//        horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)
     ) {
         otpValues.forEachIndexed { index, value ->
-            OutlinedTextField(
-                modifier = Modifier
-                    .weight(1f)
-//                    .width(64.dp)
-                    .padding(6.dp)
-                    .focusRequester(focusRequesters[index])
-                    .onKeyEvent { keyEvent ->
-                        if (keyEvent.key == Key.Backspace) {
-                            if (otpValues[index].isEmpty() && index > 0) {
-                                onUpdateOtpValuesByIndex(index, "")
-                                focusRequesters[index - 1].requestFocus()
+            Box (
+                modifier=Modifier.padding(horizontal = 1.dp).weight(1f)
+
+            ){
+                OutlinedTextField(
+                    modifier = Modifier.padding(6.dp).fillMaxWidth()
+                        .background(color = Color(0x22FFFFFF)
+                        , shape = RoundedCornerShape(12.dp))
+                        .focusRequester(focusRequesters[index])
+                        .onKeyEvent { keyEvent ->
+                            if (keyEvent.key == Key.Backspace) {
+                                if (otpValues[index].isEmpty() && index > 0) {
+                                    onUpdateOtpValuesByIndex(index, "")
+                                    focusRequesters[index - 1].requestFocus()
+                                } else {
+                                    onUpdateOtpValuesByIndex(index, "")
+                                }
+                                true
                             } else {
-                                onUpdateOtpValuesByIndex(index, "")
+                                false
                             }
-                            true
+                        },
+                    value = value,
+                    onValueChange = { newValue ->
+                        // To use OTP code copied from keyboard
+                        if (newValue.length == otpLength) {
+                            for (i in otpValues.indices) {
+                                onUpdateOtpValuesByIndex(
+                                    i,
+                                    if (i < newValue.length && newValue[i].isDigit()) newValue[i].toString() else ""
+                                )
+                            }
+
+                            keyboardController?.hide()
+                            onOtpInputComplete() // you should validate the otp values first for, if it is only digits or isNotEmpty
+                        } else if (newValue.length <= 1) {
+                            onUpdateOtpValuesByIndex(index, newValue)
+                            if (newValue.isNotEmpty()) {
+                                if (index < otpLength - 1) {
+                                    focusRequesters[index + 1].requestFocus()
+                                } else {
+                                    keyboardController?.hide()
+                                    focusManager.clearFocus()
+                                    onOtpInputComplete()
+                                }
+                            }
                         } else {
-                            false
+                            if (index < otpLength - 1) focusRequesters[index + 1].requestFocus()
                         }
                     },
-                value = value,
-                onValueChange = { newValue ->
-                    // To use OTP code copied from keyboard
-                    if (newValue.length == otpLength) {
-                        for (i in otpValues.indices) {
-                            onUpdateOtpValuesByIndex(
-                                i,
-                                if (i < newValue.length && newValue[i].isDigit()) newValue[i].toString() else ""
-                            )
-                        }
-
-                        keyboardController?.hide()
-                        onOtpInputComplete() // you should validate the otp values first for, if it is only digits or isNotEmpty
-                    } else if (newValue.length <= 1) {
-                        onUpdateOtpValuesByIndex(index, newValue)
-                        if (newValue.isNotEmpty()) {
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = if (index == otpLength - 1) ImeAction.Done else ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
                             if (index < otpLength - 1) {
                                 focusRequesters[index + 1].requestFocus()
-                            } else {
-                                keyboardController?.hide()
-                                focusManager.clearFocus()
-                                onOtpInputComplete()
                             }
+                        },
+                        onDone = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            onOtpInputComplete()
                         }
-                    } else {
-                        if (index < otpLength - 1) focusRequesters[index + 1].requestFocus()
-                    }
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = if (index == otpLength - 1) ImeAction.Done else ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        if (index < otpLength - 1) {
-                            focusRequesters[index + 1].requestFocus()
-                        }
-                    },
-                    onDone = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                        onOtpInputComplete()
-                    }
-                ),
-                shape = MaterialTheme.shapes.small,
-                isError = isError,
-                textStyle = TextStyle(
-                    textAlign = TextAlign.Center,
-                    fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                    ),
+
+                    shape = MaterialTheme.shapes.medium,
+                    isError = isError,
+                    colors = TextFieldDefaults.colors(
+                        focusedTextColor = Color.Blue,
+                        unfocusedTextColor = Color.Transparent,
+                        disabledTextColor = Color.Transparent,
+                        errorTextColor = Color.Red,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        errorContainerColor = Color.Transparent,
+                        cursorColor = Color.Blue,
+                        errorCursorColor = Color.Red,
+                        selectionColors = TextSelectionColors(
+                            handleColor = Color.Blue,
+                            backgroundColor = Color.Transparent.copy(alpha = 0.1f)
+                        ),
+                        focusedIndicatorColor = Color.Gray,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent,
+                        focusedLeadingIconColor = Color.White,
+                        unfocusedLeadingIconColor = Color.White,
+                        disabledLeadingIconColor = Color.White,
+                        errorLeadingIconColor = Color.White,
+                        focusedTrailingIconColor = Color.Magenta,
+                        unfocusedTrailingIconColor = Color.Cyan,
+                        disabledTrailingIconColor = Color.Transparent,
+                        errorTrailingIconColor = Color.Red,
+                        focusedLabelColor = Color.Magenta,
+                        unfocusedLabelColor = Color.Transparent,
+                        disabledLabelColor = Color.Transparent,
+                        errorLabelColor = Color.Red,
+                        focusedPlaceholderColor = Color.Magenta,
+                        unfocusedPlaceholderColor = Color.Transparent,
+                        disabledPlaceholderColor = Color.Transparent,
+                        errorPlaceholderColor = Color.Red,
+                        focusedSupportingTextColor = Color.Gray,
+                        unfocusedSupportingTextColor = Color.Transparent,
+                        disabledSupportingTextColor = Color.Transparent,
+                        errorSupportingTextColor = Color.Red,
+                        focusedPrefixColor = Color.Blue,
+                        unfocusedPrefixColor = Color.Transparent,
+                        disabledPrefixColor = Color.Transparent,
+                        errorPrefixColor = Color.Red,
+                        focusedSuffixColor = Color.Blue,
+                        unfocusedSuffixColor = Color.Transparent,
+                        disabledSuffixColor = Color.Transparent,
+                        errorSuffixColor = Color.Red
+                    ),
+                    textStyle = TextStyle(color = Color.White, fontWeight = FontWeight.Bold),
                 )
-            )
+            }
 
             LaunchedEffect(value) {
                 if (otpValues.all { it.isNotEmpty() }) {
@@ -159,74 +213,3 @@ fun OTPInputTextFields(
 }
 
 
-// Reference for using OTP input fields
-
-/*
-// In Screen, inside Composable function,
-OTPInputTextFields(
-    otpLength = signUpUiState.otpLength,
-    otpValues = signUpUiState.otpValues,
-    isError = signUpUiState.isOtpError,
-    onUpdateOtpValuesByIndex = { index, value ->
-        screenModel.updateOtpValue(index, value)
-    },
-    onOtpInputComplete = {
-        // Check for the otp validation
-        if (screenModel.isOtpInputValuesAreValid()) {
-            showLoadingDialog = true
-            // Call the API for OTP verification and perform any necessary actions
-            coroutineScope.launch {
-                if ( /*If API response is success*/ ) {
-                    showLoadingDialog = false
-                    showSuccessDialogWithSuccessMessage = true
-                    // After success, navigate to next screen
-                } else {
-                    showErrorMessage() // Response with error message
-                }
-            }
-        }
-    }
-)
-// In ViewModel,
-data class SignUpUiState(
-    val otpLength: Int = 6,
-    val isOtpError: Boolean = false,
-    val otpValues: List<String> = List(otpLength) { "" }
-}
-fun updateOtpValue(index: Int, value: String) {
-    val newOtpValues = _signUpUiState.value.otpValues.toMutableList() // Making list mutable to update value
-    newOtpValues[index] = value // Update value at the specified index
-    _signUpUiState.update { currentState ->
-        currentState.copy(
-            otpValues = newOtpValues,
-            isOtpError = false
-        )
-    }
-}
-*/
-
-
-
-// Separate from above (RECOMMENDED ONLY FOR TESTING)
-
-@Composable
-fun OtpInputTestFunction(modifier: Modifier = Modifier) {
-    Column(modifier) {
-        // Inside composition, use this only for testing.
-        // I recommend to do it through viewModel like above.
-        val otpValues =
-            remember { mutableStateListOf<String>("", "", "", "", "", "") }
-
-        OTPInputTextFields(
-            otpValues = otpValues,
-            otpLength = 6,
-            onOtpInputComplete = { /* TODO: Make api calls or anything after validation */ },
-            onUpdateOtpValuesByIndex = { index, value ->
-                otpValues[index] = value
-            }
-        )
-
-        // To print or check
-        Text(otpValues.joinToString())
-    }
-}
