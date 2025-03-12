@@ -73,8 +73,10 @@ fun MyApp(){
             )
         }
         composable("forgetPassword"){
-            ForgetPasswordScreen{
+            ForgetPasswordScreen(goToLogin = {
                 controller.navigate("login")
+            }){
+                controller.popBackStack()
             }
         }
         composable("home"){
@@ -85,7 +87,10 @@ fun MyApp(){
         composable("register"){
             RegisterScreen(
                 goToLogin={
-                    controller.navigate("login")
+                    controller.navigate("login"){
+                        popUpTo("register") { inclusive = true }
+                        launchSingleTop = true
+                    }
                 },
                 goToOtpScreen={
                     controller.navigate("register-otp")
@@ -98,9 +103,14 @@ fun MyApp(){
                     controller.navigate("register")
                 },
                 goToHome={
-                    controller.navigate("home")
+                    controller.navigate("home"){
+                        popUpTo("login") { inclusive = true }
+                        launchSingleTop = true
+                    }
                 },
-            )
+            ){
+                controller.popBackStack()
+            }
         }
     }
 }

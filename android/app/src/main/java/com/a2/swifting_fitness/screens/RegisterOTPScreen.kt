@@ -25,7 +25,7 @@ import com.a2.swifting_fitness.screens.compose.CustomButton
 import com.a2.swifting_fitness.screens.compose.OTPInputTextFields
 
 @Composable
-fun RegisterOTPScreen(goToRegister: () -> Unit, goToHome: () -> Unit){
+fun RegisterOTPScreen(goToRegister: () -> Unit, goToHome: () -> Unit,goBack:()->Unit){
     val (otpValue, setOTPValue) = remember { mutableStateOf(List(6) { "" }) }
     val (otpCompleted, setOtpCompleted) = remember { mutableStateOf(false) }
     Column(
@@ -38,7 +38,7 @@ fun RegisterOTPScreen(goToRegister: () -> Unit, goToHome: () -> Unit){
             Spacer(Modifier.size(30.dp))
             NextPreviousButton(
                 resources = R.drawable.back_arrow,
-                onPressed = {},
+                onPressed = goBack,
                 description = "Previous Screen",
                 modifier = Modifier
                     .width(50.dp)
@@ -77,7 +77,7 @@ fun RegisterOTPScreen(goToRegister: () -> Unit, goToHome: () -> Unit){
                     )
             }
         CustomButton(title = "Confirm", disabled = !otpCompleted) {
-
+            goToHome()
         }
         Spacer(Modifier.size(20.dp))
         }
@@ -90,6 +90,6 @@ fun RegisterOTPScreen(goToRegister: () -> Unit, goToHome: () -> Unit){
 @Preview(showSystemUi = true)
 @Composable
 private fun Preview() {
-    RegisterOTPScreen(goToRegister = {}, goToHome = {})
+    RegisterOTPScreen(goToRegister = {}, goToHome = {}, goBack = {})
 
 }

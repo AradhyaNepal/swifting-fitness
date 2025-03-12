@@ -30,12 +30,12 @@ import com.a2.swifting_fitness.screens.compose.OTPInputTextFields
 @Preview(showSystemUi = true)
 @Composable
 private fun Preview() {
-    ForgetPasswordScreen(goToLogin = {})
+    ForgetPasswordScreen(goToLogin = {}, goBack = {})
 
 }
 
 @Composable
-fun ForgetPasswordScreen(goToLogin: () -> Unit) {
+fun ForgetPasswordScreen(goToLogin: () -> Unit,goBack:()->Unit) {
     val (otpValue, setOTPValue) = remember { mutableStateOf(List(6) { "" }) }
     val (otpSent, setOTPSent) = remember { mutableStateOf(false) }
     val (otpCompleted, setOtpCompleted) = remember { mutableStateOf(false) }
@@ -55,7 +55,7 @@ fun ForgetPasswordScreen(goToLogin: () -> Unit) {
             Spacer(Modifier.size(30.dp))
             NextPreviousButton(
                 resources = R.drawable.back_arrow,
-                onPressed = {},
+                onPressed = goBack,
                 description = "Previous Screen",
                 modifier = Modifier
                     .width(50.dp)
