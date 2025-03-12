@@ -30,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.a2.swifting_fitness.R
@@ -161,7 +162,7 @@ fun OnBoardingCard(data: OnBoardingModel, goNext: () -> Unit, goPrevious: () -> 
 }
 
 @Composable
-fun NextPreviousButton(modifier:Modifier=Modifier,resources: Int, onPressed: () -> Unit, description: String) {
+fun NextPreviousButton(modifier:Modifier=Modifier,resources: Int, onPressed: () -> Unit, description: String,padding:Dp=0.dp) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -169,6 +170,7 @@ fun NextPreviousButton(modifier:Modifier=Modifier,resources: Int, onPressed: () 
             .clickable {
                 onPressed()
             }
+            .padding(padding)
             .height(75.dp)
             .width(160.dp)
             .clip(RoundedCornerShape(12.dp))
