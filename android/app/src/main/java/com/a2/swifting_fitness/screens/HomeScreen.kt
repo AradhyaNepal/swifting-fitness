@@ -71,6 +71,7 @@ fun HomeScreen(goToLogin: () -> Unit) {
         CustomButton(title = "Logout!", modifier = Modifier.padding(horizontal = 20.dp)) {
             setOpenDialog(true)
         }
+        Spacer(Modifier.size(50.dp))
     }
 
 }
