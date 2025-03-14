@@ -1,11 +1,14 @@
 package com.a2.swifting_fitness.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.HorizontalDivider
@@ -51,14 +54,14 @@ fun HomeScreen(goToLogin: () -> Unit) {
     Column(
         modifier = Modifier
             .background(Color(0xFF000000))
-            .fillMaxSize()
+            .fillMaxSize().verticalScroll(rememberScrollState()),
     ) {
 
         Column (modifier = Modifier.padding(horizontal = 20.dp)){
             Spacer(Modifier.size(60.dp))
             HomeUpperCard()
             Spacer(Modifier.size(20.dp))
-            HorizontalDivider()
+            HorizontalDivider(color = Color.Gray)
             Spacer(Modifier.size(40.dp))
         }
         WorkoutCard()
