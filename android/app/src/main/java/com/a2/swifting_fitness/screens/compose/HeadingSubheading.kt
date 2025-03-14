@@ -36,7 +36,7 @@ fun HeadingSubHeading(modifier: Modifier = Modifier,heading:String,subHeading:St
             }
         },
         textAlign = TextAlign.Start,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
 
     )
