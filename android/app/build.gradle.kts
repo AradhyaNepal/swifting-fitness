@@ -2,8 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("dagger.hilt.android.plugin") // Apply the Hilt plugin
-    kotlin("kapt") // Kotlin annotation processing
+    kotlin("plugin.serialization") version "2.1.10"
 }
 
 android {
@@ -48,16 +47,7 @@ dependencies {
     implementation("androidx.datastore:datastore-core:1.1.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 
-    // Hilt dependencies
-    implementation("com.google.dagger:hilt-android:2.42") // Updated to stable version
-    kapt("com.google.dagger:hilt-compiler:2.42") // Use Hilt compiler
 
-    // Room dependencies
-    implementation("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-
-    // Hilt Navigation for Compose
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // Additional dependencies
     implementation(libs.foundation.pager)
@@ -78,4 +68,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.navigation.compose)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 }

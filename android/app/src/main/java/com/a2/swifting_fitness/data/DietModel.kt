@@ -1,7 +1,9 @@
 package com.a2.swifting_fitness.data
 
 import com.a2.swifting_fitness.R
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DietModel(val protein: String, val heading:String, val carbs:String,var image:Int)
 
 fun getDietItems(): MutableList<DietModel>{

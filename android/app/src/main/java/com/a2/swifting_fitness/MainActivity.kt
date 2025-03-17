@@ -7,19 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.a2.swifting_fitness.data.DietModel
-import com.a2.swifting_fitness.data.SharedViewModel
 import com.a2.swifting_fitness.screens.DietDetailScreen
 import com.a2.swifting_fitness.screens.ForgetPasswordScreen
 import com.a2.swifting_fitness.screens.HomeScreen
@@ -29,13 +21,9 @@ import com.a2.swifting_fitness.screens.RegisterOTPScreen
 import com.a2.swifting_fitness.screens.RegisterScreen
 import com.a2.swifting_fitness.screens.SplashScreen
 import com.a2.swifting_fitness.ui.theme.SwiftingFitnessTheme
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
+import kotlinx.serialization.Serializable
 
-@HiltAndroidApp
-class MyApplication: Application()
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,25 +87,17 @@ fun MyApp() {
             }
         }
         composable("home") { entry ->
-            val viewModel = hiltViewModel<SharedViewModel>()
+
             HomeScreen(
                 goToDietDetail = {dietModel->
-                    viewModel.updateState(dietModel)
-                    controller.navigate("diet-detail")
+                    controller.navigate(dietModel)
                 }
             ) {
                 controller.navigate("login")
             }
         }
-        composable("diet-detail") {
-            val viewModel = hiltViewModel<SharedViewModel>()
-            val state = viewModel.sharedState.collectAsStateWithLifecycle()
-            val value = state.value
-            if(value==null){
-                Text(text = "No Details to open screen")
-            }else{
-                DietDetailScreen(dietModel = value)
-            }
+        composable<DietModel>{
+             DietDetailScreen(dietModel = it.toRoute<DietModel>())
 
         }
         composable("register") {
@@ -152,5 +132,6 @@ fun MyApp() {
 
     }
 }
-
+@Serializable
+object  Splash
 
