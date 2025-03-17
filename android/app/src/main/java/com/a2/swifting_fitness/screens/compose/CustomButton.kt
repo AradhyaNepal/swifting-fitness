@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import com.a2.swifting_fitness.R
 
 @Composable
-fun CustomButton(modifier: Modifier = Modifier,title:String,disabled: Boolean=false,onClick:()->Unit) {
+fun CustomButton(modifier: Modifier = Modifier,title:String,disabled: Boolean=false,color: Color=Color(0xFFF77500),onClick:()->Unit) {
     Button(modifier = modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors().copy(
-        containerColor = Color(0xFFF77500),
+        containerColor = color,
         contentColor = Color(0xFFFFFFFF),
         disabledContainerColor = Color(0xAAF77500)
     ), onClick = onClick, enabled = !disabled
