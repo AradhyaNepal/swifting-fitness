@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.a2.swifting_fitness.data.DietModel
 import com.a2.swifting_fitness.screens.compose.CustomAlertDialog
 import com.a2.swifting_fitness.screens.compose.CustomButton
 import com.a2.swifting_fitness.screens.compose.DietCard
@@ -27,14 +28,12 @@ import com.a2.swifting_fitness.screens.compose.WorkoutCard
 @Preview(showSystemUi = true)
 @Composable
 private fun Preview() {
-    HomeScreen {
-
-    }
+    HomeScreen ({}){}
 
 }
 
 @Composable
-fun HomeScreen(goToLogin: () -> Unit) {
+fun HomeScreen(goToDietDetail:(DietModel)->Unit,goToLogin: () -> Unit) {
     val (openDialog, setOpenDialog) = remember { mutableStateOf(false) }
     when {
         openDialog -> CustomAlertDialog(
@@ -65,7 +64,7 @@ fun HomeScreen(goToLogin: () -> Unit) {
         }
         WorkoutCard()
         Spacer(Modifier.size(30.dp))
-        DietCard()
+        DietCard(goToDietDetail)
         Spacer(Modifier.size(50.dp))
         CustomButton(title = "Logout!", modifier = Modifier.padding(horizontal = 20.dp)) {
             setOpenDialog(true)
