@@ -1,6 +1,7 @@
 package com.a2.swifting_fitness.features.auth.service;
 
 import com.a2.swifting_fitness.common.enums.UserRole;
+import com.a2.swifting_fitness.common.enums.UserTier;
 import com.a2.swifting_fitness.features.auth.entity.Users;
 import com.a2.swifting_fitness.features.auth.repository.UsersRepository;
 import jakarta.annotation.PostConstruct;
@@ -22,7 +23,9 @@ public class CreateAdminService {
                 userRepository.save(
                         Users.builder()
                                 .email(email)
-                                .fullName("Super Admin")
+                                .firstName("Super")
+                                .lastName("Admin")
+                                .userTier(UserTier.PRO)
                                 .role(UserRole.admin)
                                 .password(passwordEncoder.encode("Test@123"))
                                 .accountVerified(false)

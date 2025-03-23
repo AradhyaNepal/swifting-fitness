@@ -2,16 +2,21 @@ package com.a2.swifting_fitness.features.auth.service;
 
 
 import com.a2.swifting_fitness.common.constants.StringConstants;
+import com.a2.swifting_fitness.common.enums.FileType;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.utils.UserFromSecurityContext;
 import com.a2.swifting_fitness.common.config.JwtService;
+import com.a2.swifting_fitness.features.auth.dto.ProfileUpdateRequest;
 import com.a2.swifting_fitness.features.auth.dto.RefreshTokenRequest;
 import com.a2.swifting_fitness.features.auth.dto.RefreshTokenResponse;
 import com.a2.swifting_fitness.features.auth.dto.UserDetailsResponse;
 import com.a2.swifting_fitness.features.auth.repository.UsersRepository;
+import com.a2.swifting_fitness.features.file_storage.service.FileStorageService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +25,7 @@ public class UserService {
     final RefreshTokenService refreshTokenService;
     final JwtService jwtService;
     final BlockUserService blockUserService;
+    final FileStorageService fileStorageService;
 
     public RefreshTokenResponse refreshToken(RefreshTokenRequest request) throws CustomException {
         try {
@@ -45,6 +51,18 @@ public class UserService {
 
     public UserDetailsResponse getUserDetails() throws CustomException {
         var user = UserFromSecurityContext.get();
+        return UserDetailsResponse.fromFitnessFolks(user);
+
+    }
+
+
+    public  UserDetailsResponse updateProfile(ProfileUpdateRequest request) throws CustomException, IOException {
+        var user = UserFromSecurityContext.get();
+     user.setFirstName(request.getFirstName());
+     user.setLastName(request.getSecondName());
+       var profile= fileStorageService.saveFile(request.getProfilePicture(), FileType.IMAGE,false);
+     user.setProfile(profile);
+     userRepo.save(user);
         return UserDetailsResponse.fromFitnessFolks(user);
 
     }

@@ -1,5 +1,6 @@
 package com.a2.swifting_fitness.features.auth.dto;
 
+import com.a2.swifting_fitness.common.enums.UserTier;
 import com.a2.swifting_fitness.features.auth.entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,19 +12,26 @@ import lombok.Data;
 public class UserDetailsResponse {
     private String uid;
     private String email;
-    private  String fullName;
+    private  String firstName;
+    private  String secondName;
     private String profile;
     private int healthyPercentage;
-    private String userTire;
+    private UserTier userTire;
 
     static public UserDetailsResponse fromFitnessFolks(Users users) {
+        var image=users.getProfile();
+        String profileId=null;
+        if(image!=null){
+            profileId=image.getId();
+        }
         return UserDetailsResponse.builder()
                 .uid(users.getUid())
-                .fullName(users.getFullName())
+                .firstName(users.getFirstName())
+                .secondName(users.getLastName())
                 .email(users.getEmail())
-                .profile(users.getProfile())
-                .healthyPercentage(88)
-                .userTire("Pro")
+                .profile(profileId)
+                .healthyPercentage(users.getHealthyPercentage())
+                .userTire(users.getUserTier())
                 .build();
     }
 

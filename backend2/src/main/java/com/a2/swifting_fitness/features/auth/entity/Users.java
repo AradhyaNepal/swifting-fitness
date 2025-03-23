@@ -1,6 +1,8 @@
 package com.a2.swifting_fitness.features.auth.entity;
 
 import com.a2.swifting_fitness.common.enums.UserRole;
+import com.a2.swifting_fitness.common.enums.UserTier;
+import com.a2.swifting_fitness.features.file_storage.entity.FileStorage;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -29,17 +31,22 @@ public class Users implements UserDetails {
     private int id;
 
     @NotNull
-    private String fullName;
+    private String firstName;
+    @NotNull
+    private String lastName;
 
     @NotNull
     @Column(unique = true)
     private String email;
 
+    @OneToOne
+    @JoinColumn(name = "image")
+    private FileStorage profile;
 
-    private String profile;
 
-
-
+    private int healthyPercentage;
+    @Enumerated(EnumType.STRING)
+    private UserTier userTier;
 
     private int wrongAttempts;
     private Instant isBlockedTill;

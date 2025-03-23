@@ -2,6 +2,7 @@ package com.a2.swifting_fitness.features.auth.service;
 
 import com.a2.swifting_fitness.common.enums.OTPPurpose;
 import com.a2.swifting_fitness.common.enums.UserRole;
+import com.a2.swifting_fitness.common.enums.UserTier;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.config.JwtService;
@@ -115,7 +116,9 @@ public class AuthService {
                     message = StringConstants.reRegisterSuccessfully;
                 }
             }
-            user.setFullName(request.getFirstName() + " " + request.getSecondName());
+            user.setFirstName(request.getFirstName() );
+            user.setLastName(request.getSecondName() );
+            user.setUserTier(UserTier.NEWBIE);
             user.setEmail(request.getEmail());
             user.setAccountVerified(false);
             user.setPassword(passwordEncoder.encode(request.getPassword()));

@@ -29,6 +29,7 @@ public class StringConstants {
     public static final String sendingOTPLocked = "Lots of OTP sent. Please try again later after few hours.";
     public static final String newOTPCanOnlyBeSentAfter = "New OTP can only be sent after 1 minutes";
     public static final String userDetailsFetchedSuccessfully = "User details fetched successfully.";
+    public static final String userProfileUpdated = "User profile updated successfully.";
     public static final String successfullyLoggedOut = "Successfully Logged Out.";
     public static final String refreshTokenSuccessful = "Refresh Token Successful";
     public static final String userNotFound = "User not found...";
