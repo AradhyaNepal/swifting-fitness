@@ -24,6 +24,6 @@ public class UserWorkoutController {
 
     @GetMapping()
     GenericResponseEntity<List<WorkoutResponse>> getAllWorkout(@PathParam(value = "pageSize") Integer pageSize, @PathParam(value = "pageNumber") Integer pageNumber) {
-        return GenericResponseEntity.successWithPagination(service.getWorkoutList(pageSize, pageNumber-1), StringConstants.dietFetchedSuccessfully);
+        return GenericResponseEntity.successWithPagination(service.getWorkoutList(pageSize, pageNumber-1), StringConstants.workoutFetchedSuccessfully);
     }
 }

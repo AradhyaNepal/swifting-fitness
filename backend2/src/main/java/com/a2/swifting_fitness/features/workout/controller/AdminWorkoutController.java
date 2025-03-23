@@ -28,6 +28,6 @@ public class AdminWorkoutController {
     @SecurityRequirement(name = "Device-Id")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public GenericResponseEntity<WorkoutResponse> saveWorkout(@Valid @ModelAttribute WorkoutRequest request) throws IOException, CustomException {
-        return  GenericResponseEntity.successWithData(service.addWorkout(request),StringConstants.dietAddedSuccessfully);
+        return  GenericResponseEntity.successWithData(service.addWorkout(request),StringConstants.workoutAddedSuccessfully);
     }
 }

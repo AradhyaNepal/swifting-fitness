@@ -55,6 +55,8 @@ public class StringConstants {
     public static String alreadyAccountVerified = "Account already verified. PLease login to continue using";
     public static String adminRegisteredSuccessfully="Admin registered successfully.";
     public static String dietAddedSuccessfully="Diet added successfully.";
+    public static String workoutAddedSuccessfully="Workout added successfully.";
     public static String dietFetchedSuccessfully="Diet fetched successfully";
+    public static String workoutFetchedSuccessfully="Workout fetched successfully";
     public static String cannotSaveFile="Cannot save file";
 }
