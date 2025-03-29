@@ -6,10 +6,7 @@ import com.a2.swifting_fitness.common.enums.FileType;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.utils.UserFromSecurityContext;
 import com.a2.swifting_fitness.common.config.JwtService;
-import com.a2.swifting_fitness.features.auth.dto.ProfileUpdateRequest;
-import com.a2.swifting_fitness.features.auth.dto.RefreshTokenRequest;
-import com.a2.swifting_fitness.features.auth.dto.RefreshTokenResponse;
-import com.a2.swifting_fitness.features.auth.dto.UserDetailsResponse;
+import com.a2.swifting_fitness.features.auth.dto.*;
 import com.a2.swifting_fitness.features.auth.repository.UsersRepository;
 import com.a2.swifting_fitness.features.file_storage.service.FileStorageService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -54,6 +51,15 @@ public class UserService {
         return UserDetailsResponse.fromFitnessFolks(user);
 
     }
+
+    public void logout(LogoutRequest request) throws CustomException {
+        var user = UserFromSecurityContext.get();
+        var fcmTokens=user.getFcmToken();
+        fcmTokens.removeIf(e->e.equals(request.getFcmToken()));
+        user.setFcmToken(fcmTokens);
+        userRepo.save(user);
+    }
+
 
 
     public  UserDetailsResponse updateProfile(ProfileUpdateRequest request) throws CustomException, IOException {

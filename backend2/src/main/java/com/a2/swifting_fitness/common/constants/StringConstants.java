@@ -5,6 +5,7 @@ public class StringConstants {
     public static final String firstNameRequired = "Please enter your first name";
     public static final String secondNameRequired = "Please enter your second name";
     public static final String emailRequired = "Please enter your email";
+    public static final String fcmRequired = "FCM is required";
     public static final String emailNotValid = "Email is invalid";
 
     public static final String passwordRequired = "Please enter your password";
@@ -40,6 +41,9 @@ public class StringConstants {
     public static final String refreshTokenExpired = "Refresh token is expired. Please make a new login..!";
     public static final String invalidRefreshToken = "Invalid refresh token";
     public static final String deviceIdRequired = "Device Id is required";
+    public static final String titleIsRequired = "Title Cannot be empty";
+    public static final String userUidIsRequired = "User uid is required";
+    public static final String uiNavigateToCannotBeEmpty = "UI Navigate To Cannot Be Empty";
     public static final String newDeviceSet = "New device has been set for your account";
     public static final String dietNameMustNotBeEmpty = "Diet name must not be empty";
     public static final String workoutNameMustNotBeEmpty = "Workout name must not be empty";

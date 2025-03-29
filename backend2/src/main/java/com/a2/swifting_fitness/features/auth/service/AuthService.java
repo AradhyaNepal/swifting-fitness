@@ -10,6 +10,7 @@ import com.a2.swifting_fitness.common.exception.OTPResendLimitException;
 import com.a2.swifting_fitness.features.auth.dto.*;
 import com.a2.swifting_fitness.features.auth.entity.Users;
 import com.a2.swifting_fitness.features.auth.repository.UsersRepository;
+import com.a2.swifting_fitness.features.notification.repository.FCMRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
@@ -31,6 +32,7 @@ public class AuthService {
     final private PasswordEncoder passwordEncoder;
     final private RefreshTokenService refreshTokenService;
     final private BlockUserService blockUserService;
+    final private FCMRepository fcmRepository;
 
 
     public AuthenticatedResponse login(LoginRequest request) throws CustomException {
@@ -41,6 +43,10 @@ public class AuthService {
                 if (authentication.isAuthenticated()) {
                     if (user.isPresent()) {
                         var userGet = user.get();
+                        if(request.getFcmToken()!=null){
+                            userGet.getFcmToken().add(request.getFcmToken());
+                            fcmRepository.subscribe(request.getFcmToken(),"all");
+                        }
                         checkForAdmin(request,userGet);
                         blockUserService.removeUserAllBlockageAndSave(userGet, userRepo);
                         var accessToken = jwtService.generateToken(userGet);

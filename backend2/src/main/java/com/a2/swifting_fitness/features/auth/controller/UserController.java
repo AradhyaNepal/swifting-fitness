@@ -3,6 +3,7 @@ package com.a2.swifting_fitness.features.auth.controller;
 import com.a2.swifting_fitness.common.exception.CustomException;
 import com.a2.swifting_fitness.common.constants.StringConstants;
 import com.a2.swifting_fitness.common.model.GenericResponseEntity;
+import com.a2.swifting_fitness.features.auth.dto.LogoutRequest;
 import com.a2.swifting_fitness.features.auth.dto.ProfileUpdateRequest;
 import com.a2.swifting_fitness.features.auth.dto.UserDetailsResponse;
 import com.a2.swifting_fitness.features.auth.service.UserService;
@@ -35,7 +36,8 @@ public class UserController {
     }
 
     @PostMapping(value = "logout")
-    public GenericResponseEntity<Void> logout() throws CustomException {
+    public GenericResponseEntity<Void> logout(@Valid @RequestBody LogoutRequest request) throws CustomException {
+        userService.logout(request);
         return GenericResponseEntity.successWithMessage( StringConstants.successfullyLoggedOut);
     }
 

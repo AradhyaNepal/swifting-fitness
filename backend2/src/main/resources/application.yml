@@ -44,3 +44,6 @@ spring:
           starttls:
             enable: true
 
+app:
+  firebase-configuration-file: "classpath:notification.json"
+

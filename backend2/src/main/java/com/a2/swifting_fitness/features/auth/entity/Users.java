@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -71,6 +72,9 @@ public class Users implements UserDetails {
 
     @Column(unique = true, nullable = false, updatable = false)
     private String uid;
+
+    @OneToMany(mappedBy = "fcm_token", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<String> fcmToken = new ArrayList<>();
 
 
     @Override
