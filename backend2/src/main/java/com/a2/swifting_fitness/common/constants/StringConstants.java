@@ -20,6 +20,7 @@ public class StringConstants {
     public static final String otpVerifiedSuccessfully = "OTP Verified successfully";
     public static final String passwordSetSuccessfully = "Account created and password set successfully";
     public static final String loggedInSuccessfully = "Logged in successfully";
+    public static final String notificationSuccessfullySent = "Notification Successfully Sent";
     public static final String emailSentSuccessfully = "Email sent successfully";
     public static final String passwordChangedSuccessfullyPleaseLogin = "Password changed successfully. Please login and enjoy your fitness journey.";
     public static final String invalidCredentials = "Invalid Credentials";

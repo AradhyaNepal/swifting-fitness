@@ -26,7 +26,7 @@ public class NotificationService {
     final private UsersRepository usersRepository;
     final private UiNavigationRepository uiNavigationRepository;
 
-    void sendToAllDevice(AllNotificationRequest request) throws ExecutionException, InterruptedException {
+    public void sendToAllDevice(AllNotificationRequest request) throws ExecutionException, InterruptedException {
         fcmRepository.sendMessageToToken(
                 NotificationRequest.builder()
                         .topic("all")
@@ -42,7 +42,7 @@ public class NotificationService {
 
 
 
-    void sendToSpecificUser(SpecificUserNotificationRequest request) throws CustomException, ExecutionException, InterruptedException {
+    public void sendToSpecificUser(SpecificUserNotificationRequest request) throws CustomException, ExecutionException, InterruptedException {
         var user = usersRepository.findByUId(request.getUserUid());
         if (user.isEmpty()) {
             throw new CustomException(StringConstants.userNotFound, HttpStatus.NOT_FOUND);
