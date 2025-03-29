@@ -34,6 +34,7 @@ public class StringConstants {
     public static final String successfullyLoggedOut = "Successfully Logged Out.";
     public static final String refreshTokenSuccessful = "Refresh Token Successful";
     public static final String userNotFound = "User not found...";
+    public static final String uiNavigationNotFound = "UI Navigation not found...";
     public static final String invalidToken = "Invalid JWT Token. How the heck this was allowed in our system.";
     public static final String accountSetupNotComplete = "Your account setup isn't completed yet, due to which your account is currently disabled.";
     public static final String accountLocked = "Your account has been locked for few hours. It might be due to lots of wrong attempts.";

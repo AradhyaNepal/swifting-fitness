@@ -18,6 +18,6 @@ public class UINavigationPath {
     private String code;
 
     @NotNull
-    private String payloadDocumentation;
+    private String documentation;
 
 }

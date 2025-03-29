@@ -21,18 +21,5 @@ public class UserNotificationResponse {
     private Instant createdAt;
     private  boolean seen;
 
-    static  public UserNotificationResponse fromUserNotification(UserNotification userNotification){
-        return  UserNotificationResponse.builder()
-                .image(userNotification.getImage())
-                .title(userNotification.getTitle())
-                .description(userNotification.getDescription())
-                .onClickedGoTo(userNotification.getOnClickedGoTo())
-                .onClickedGoToData(userNotification.getOnClickedGoToData())
-                .onClickGoToWeb(userNotification.isOnClickGoToWeb())
-                .body(userNotification.getBody())
-                .topic(userNotification.getTopic())
-                .createdAt(userNotification.getCreatedAt())
-                .seen(userNotification.isSeen())
-                .build();
-    }
+
 }
