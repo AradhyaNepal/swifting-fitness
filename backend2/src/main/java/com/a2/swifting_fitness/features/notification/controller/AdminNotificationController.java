@@ -6,6 +6,7 @@ import com.a2.swifting_fitness.common.model.GenericResponseEntity;
 import com.a2.swifting_fitness.features.notification.dto.AllNotificationRequest;
 import com.a2.swifting_fitness.features.notification.dto.SpecificUserNotificationRequest;
 import com.a2.swifting_fitness.features.notification.service.NotificationService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,9 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping(value = "/api/v1/admin")
 @RequiredArgsConstructor
 @RestController
-public class NotificationController {
+@SecurityRequirement(name = "Authorization")
+@SecurityRequirement(name = "Device-Id")
+public class AdminNotificationController {
 
     final NotificationService notificationService;
     @PostMapping(value = "send-notification-to-all")

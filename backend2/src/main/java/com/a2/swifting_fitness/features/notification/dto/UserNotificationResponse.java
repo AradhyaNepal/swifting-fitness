@@ -14,6 +14,7 @@ public class UserNotificationResponse {
     private String title;
     private  String description;
     private  String onClickedGoTo;
+    private  String onClickedGoToDocumentation;
     private  String onClickedGoToData;
     private boolean onClickGoToWeb;
     private String body;
@@ -21,5 +22,19 @@ public class UserNotificationResponse {
     private Instant createdAt;
     private  boolean seen;
 
-
+    static  public UserNotificationResponse map(UserNotification userNotification){
+        return  UserNotificationResponse.builder()
+                .image(userNotification.getImage())
+                .title(userNotification.getTitle())
+                .description(userNotification.getDescription())
+                .onClickedGoTo(userNotification.getUiNavigationPath().getCode())
+                .onClickedGoToData(userNotification.getOnClickedGoToData())
+                .onClickedGoToDocumentation(userNotification.getUiNavigationPath().getDocumentation())
+                .onClickGoToWeb(userNotification.isOnClickGoToWeb())
+                .body(userNotification.getBody())
+                .topic(userNotification.getTopic())
+                .createdAt(userNotification.getCreatedAt())
+                .seen(userNotification.isSeen())
+                .build();
+    }
 }

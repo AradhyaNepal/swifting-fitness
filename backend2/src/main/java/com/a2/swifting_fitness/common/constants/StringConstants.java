@@ -5,6 +5,7 @@ public class StringConstants {
     public static final String firstNameRequired = "Please enter your first name";
     public static final String secondNameRequired = "Please enter your second name";
     public static final String emailRequired = "Please enter your email";
+    public static final String notificationId = "Please enter notification id";
     public static final String fcmRequired = "FCM is required";
     public static final String emailNotValid = "Email is invalid";
 
@@ -64,6 +65,10 @@ public class StringConstants {
     public static String dietAddedSuccessfully="Diet added successfully.";
     public static String workoutAddedSuccessfully="Workout added successfully.";
     public static String dietFetchedSuccessfully="Diet fetched successfully";
+    public static String notificationFetchedSuccessfully="Notification fetched successfully";
+    public static String notificationSuccessfullySetSeen="Notification Successfully Set Seen";
     public static String workoutFetchedSuccessfully="Workout fetched successfully";
     public static String cannotSaveFile="Cannot save file";
+    public static String noNotificationFound="No Notification found";
+    public static String notificationDoesNotBelongsToYou="Notification Does not belongs to you";
 }
